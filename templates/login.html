@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Quiz Master-login</title>
+    <style>
+        body{
+            background-color: #f4f4f4;
+        }
+        .body_of_sigin{
+            width: 100%;
+            height: 85vh;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        .Signin_box{
+          width: 550px;
+          min-width: 100px ;
+          margin: 0 20px 0 20px;
+        }
+        .alert{
+            /* position: relative; */
+            max-width: 60vw;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand fs-3 text-light" href="/">Quiz Master</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            
+          </div>
+        </div>
+      </nav>
+      {% for message in get_flashed_messages()%}
+    
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {%endfor%}
+<div class="body_of_sigin">
+  {{added}}
+<div class="Signin_box rounded-1 shadow p-5">
+    <h1 class="pb-4">Signin</h1>
+    <form method="POST" action="/">
+  
+        {{form.hidden_tag()}}
+        {{form.mail.label(class="form-label")}}
+        {{form.mail(class="form-control")}}
+        <br>
+        {{form.password.label(class="form-label")}}
+        {{form.password(class="form-control")}}
+        <br>
+        <div class="d-flex flex-column align-items-center justify-content-center gap-3">
+        {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2" )}}
+        <a style="color: black;" href="/register">Register?</a>
+      </div>
+    </form>
+</div>
+</div>
+
+<script>
+
+function empty_the_inputs(){
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.value = '';
+  });
+}
+
+</script>
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
