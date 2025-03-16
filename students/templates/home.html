@@ -1,0 +1,114 @@
+{% extends "student_dashboard.html" %}
+ {% block content %}
+ <div class="container border shadow rounded p-5">
+  <h2>Upcoming Quizzes</h2>
+
+  <!-- Responsive Table Wrapper -->
+  <div class="table-responsive rounded">
+    <table class="table border  table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Questions</th>
+          <th scope="col">Date</th>
+          <th scope="col">Duration</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for quiz in new_data %}
+        <tr>
+          <td>{{quiz[0]}}</td>
+          <td>{{quiz[1]}}</td>
+          <td>{{quiz[2]}}</td>
+          <td>{{quiz[3]}}</td>
+          <td>
+            <div class="d-flex flex-wrap gap-2">
+              <!-- View Button -->
+              <button 
+                class="btn btn-outline-success view-btn" 
+                data-bs-toggle="modal" 
+                data-bs-target="#viewmodal"
+                data-id="{{ quiz[0] }}" 
+                data-subject="{{ quiz[5] }}" 
+                data-chapter="{{ quiz[4] }}" 
+                data-questions="{{ quiz[1] }}" 
+                data-date="{{ quiz[2] }}" 
+                data-duration="{{ quiz[3] }}">
+                View
+              </button>
+
+              <!-- Start or Completed Button -->
+              <div class="d-flex justify-content-center">
+                {% if quiz[2] == date %}
+                  <form method="post" action="{{url_for('students.student_dashboard', mail=mail, quiz_id=quiz[0])}}">
+                    <button type="submit" class="btn btn-outline-primary w-100" onclick="confirm('Are you sure you want to start the test?')">
+                      Start test
+                    </button>
+                  </form>
+                {% elif quiz[2] < date %}
+                  <button class="btn btn-warning text-light w-100" onclick="alert('Oops! Too late')">Completed</button>
+                {% else %}
+                  <button class="btn btn-danger w-100" onclick="alert('The quiz date is not today')">Upcoming test</button>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="viewmodal" tabindex="-1" aria-labelledby="viewModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">Quiz Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Id</td>
+                <td><span id="quiz-id"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Subject:</td>
+                <td><span id="quiz-subject"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Chapter:</td>
+                <td><span id="quiz-chapter"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Number of questions:</td>
+                <td><span id="quiz-questions"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Scheduled Date:</td>
+                <td><span id="quiz-date"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">6</th>
+                <td>Duration:</td>
+                <td><span id="quiz-duration"></span> Hours</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

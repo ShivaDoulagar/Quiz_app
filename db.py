@@ -38,7 +38,7 @@ class Chapter(db.Model):
 
 
 class Quiz(db.Model):
-    __tablename__ = 'quizzes'
+    __tablename__ = 'quiz'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'), nullable=False)
@@ -46,17 +46,18 @@ class Quiz(db.Model):
     time_duration = db.Column(db.Integer, nullable=False)
     remarks = db.Column(db.String(255), nullable=True)
 
-    chapter = db.relationship('Chapter', backref='quizzes')
+    chapter = db.relationship('Chapter', backref='quiz')
 
 
 class Questions(db.Model):
     __tablename__ = 'questions'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
+    question_title = db.Column(db.String(255), nullable=False)
     question = db.Column(db.String(255), nullable=False)
     options = db.Column(db.String(255), nullable=False)
-
+    chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'), nullable=False)
     quiz = db.relationship('Quiz', backref='questions')
 
 
@@ -64,10 +65,11 @@ class Scores(db.Model):
     __tablename__ = 'scores'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    time = db.Column(db.Integer, nullable=False)
-    total_score = db.Column(db.Integer, nullable=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+    total_score = db.Column(db.Integer, nullable=False)
+    number_of_questions = db.Column(db.Integer, nullable=False)
 
     quiz = db.relationship('Quiz', backref='scores')
     user = db.relationship('Users', backref='scores')

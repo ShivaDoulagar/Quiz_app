@@ -10,4 +10,4 @@ class Signin_form(FlaskForm):
     full_name = StringField("Full Name",validators=[DataRequired()])
     qualification = StringField("Qualification",validators=[DataRequired()])
     dob = DateField("Date Of Birth",validators=[DataRequired()])
-    submit =  SubmitField("Submit")
+    submit =  SubmitField("Login")

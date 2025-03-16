@@ -13,7 +13,7 @@ app.register_blueprint(admin_bp,url_prefix = "/admin")
 app.register_blueprint(students_bp,url_prefix = "/students")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
-app.config['SECRET_KEY'] = Your Key
+app.config['SECRET_KEY'] = "quiz app made by me and very secure!!!!!"
 
 
 
@@ -40,14 +40,13 @@ def signin():
             cur = db.cursor()
 
             # Fetch user details securely
-            user_data = cur.execute('SELECT mail, password FROM users WHERE mail = ?', (mail,)).fetchone()
+            user_data = cur.execute('SELECT  mail, password FROM users WHERE mail = ?', (mail,)).fetchone()
             if user_data and check_password_hash(user_data[1], password):
                 session['user'] = {'role': 'student', 'email': mail}
-                return redirect(url_for('student_dashboard'))
+                return redirect(url_for('student_dashboard',mail = user_data[0]))
             else:
                 flash("Invalid email or password!")
                 return render_template('login.html', form=form)
-
         except Exception as e:
             return render_template('error.html', error_message=str(e))
 
@@ -57,19 +56,24 @@ def signin():
 
 
 
-@app.route('/admin')
+@app.route('/admin/')
 def admin_dashboard():
     if 'user' not in session or session['user']['role'] != 'admin':
         flash("Access denied! Please log in as admin.")
         return redirect(url_for('signin'))
     return render_template('admin_dashboard.html')
 
-@app.route('/students')
-def student_dashboard():
+
+
+
+
+@app.route('/students/<mail>')
+def student_dashboard(mail):
     if 'user' not in session or session['user']['role'] != 'student':
         flash("Access denied! Please log in as a student.")
         return redirect(url_for('signin'))
-    return render_template('student_dashboard.html',name = session['user']['email'].split('@')[0] )
+    return render_template('home.html',name = session['user']['email'].split('@')[0] )
+
 
 @app.route('/logout')
 def logout():
@@ -78,33 +82,15 @@ def logout():
     return redirect(url_for('signin'))
 
 
+
+
+
 @app.before_request
 def session_timeout():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=30)  # Set timeout duration
 
 
-
-a = "hola"
-
-# @app.route('/', methods=['GET', 'POST'])
-# def sign_in():
-#     mail = None
-#     password = None
-#     form = Signin_form()
-#     if form.validate_on_submit():
-#         try:
-#             mail = form.mail.data
-#             password = form.password.data
-#             # Clear form fields
-#             form.mail.data = ''
-#             form.password.data = ''
-#             return render_template('demo.html', mail=mail, password=password)
-#         except Exception as e:
-#             # Render the Error.html template with the exception message
-#             return render_template('error.html', error_message=str(e))
-#     # Default render: login page with form
-#     return render_template('login.html', mail=mail, password=password, form=form)
 
 
 def adapt_date(date):
@@ -147,7 +133,7 @@ def register():
                 db.commit()
                 form = Signin_form()
                 flash('Registered Successfully!!!')
-                return render_template('register.html',form = form,mail = mail,password = password,full_name = full_name,qualification= qualification,dob = dob)
+                return redirect(url_for('signin'))
 
         except Exception as e:
             return str(e)
@@ -163,4 +149,5 @@ def register():
 
 
 if __name__ == "__main__":
+    # app.run(host='0.0.0.0', port=5000, debug=True)
     app.run(debug=True)

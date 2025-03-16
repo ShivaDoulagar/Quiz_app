@@ -1,0 +1,34 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<div class="container">
+  <h2>Edit Question</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="question_title" class="form-label">Question Title:</label>
+      <input type="text" class="form-control" id="question_title" name="question_title" value="{{ question_title }}" required>
+    </div>
+    
+    <div class="mb-3">
+      <label for="question" class="form-label">Question:</label>
+      <textarea class="form-control" id="question" name="question" rows="3" required>{{ question }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Options:</label>
+      <input type="text" class="form-control" name="option1" value="{{ options[0] }}" required>
+      <input type="text" class="form-control mt-2" name="option2" value="{{ options[1] }}" required>
+      <input type="text" class="form-control mt-2" name="option3" value="{{ options[2] }}" required>
+      <input type="text" class="form-control mt-2" name="option4" value="{{ options[3] }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="correct_option" class="form-label">Correct Option:</label>
+      <input type="text" class="form-control" id="correct_option" name="correct_option" value="{{ options[4] }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{{ url_for('admin.quiz') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

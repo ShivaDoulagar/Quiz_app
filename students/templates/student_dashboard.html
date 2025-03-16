@@ -4,32 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    
+  <link rel="stylesheet" href="{{ url_for('students.static', filename='css/style.css') }}">
     <title>Student-Dashboard</title>
-    <style>
-        nav{
-            color: white;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;" >
         
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Quiz Master</a>
+          <a class="navbar-brand" href="{{url_for('students.student_dashboard',mail = mail)}}">Quiz Master</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="{{url_for('students.student_dashboard',mail = mail)}}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Scores</a>
+                <a class="nav-link active" aria-current="page" href="{{url_for('students.scores',mail = mail)}}">Scores</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Summary</a>
+                <a class="nav-link" href="{{url_for('students.summary',mail = mail)}}">Summary</a>
               </li>
               
               <li class="nav-item">
@@ -41,10 +37,10 @@
               </li>
               
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex" role="search" onsubmit="searchContent(event)">
+              <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="highlightSearch()" >
               <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+          </form>
             <span class="navbar-text ms-5 me-3">
         Welcome {{name|capitalize}}
       </span>
@@ -52,9 +48,90 @@
         </div>
       </nav>
 
+      {% for message in get_flashed_messages()%}
+
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {%endfor%}
+
+      <div class="main">
+        <div class="container mt-5">
+          <div id="subjects-container" class="row g-4 mt-4">
+            {% block content %} 
+    
+    {% endblock %}
+          </div>
+        </div>
+      </div>
+                            
 
 
-
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p6+URqqzMlTquC2kz88u7xaZsU6xVfIuOd1i9a2gx6HzYlF" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const viewButtons = document.querySelectorAll(".view-btn");
+    
+        viewButtons.forEach(button => {
+          button.addEventListener("click", function () {
+            // Get data attributes from clicked button
+            const quizId = button.getAttribute("data-id");
+            const subject = button.getAttribute("data-subject");
+            const chapter = button.getAttribute("data-chapter");
+            const questions = button.getAttribute("data-questions");
+            const date = button.getAttribute("data-date");
+            const duration = button.getAttribute("data-duration");
+    
+            // Set modal content
+            document.getElementById("quiz-id").textContent = quizId;
+            document.getElementById("quiz-subject").textContent = subject;
+            document.getElementById("quiz-chapter").textContent = chapter;
+            document.getElementById("quiz-questions").textContent = questions;
+            document.getElementById("quiz-date").textContent = date;
+            document.getElementById("quiz-duration").textContent = duration;
+          });
+        });
+      });
+      document.querySelector('.search').addEventListener('input', function() {
+    let searchValue = this.value.toLowerCase();
+    let items = document.querySelectorAll('.searchable-item'); // Target only relevant items
+
+    items.forEach(item => {
+        if (item.textContent.toLowerCase().includes(searchValue)) {
+            item.style.display = "block"; // Show matching items
+        } else {
+            item.style.display = "none"; // Hide non-matching items
+        }
+    });
+});
+
+function highlightSearch() {
+    let input = document.getElementById("searchInput").value.trim().toLowerCase();
+    let table = document.querySelector("table"); 
+    let cells = table.getElementsByTagName("td");
+
+    for (let cell of cells) {
+        let text = cell.innerText;
+        let lowerText = text.toLowerCase();
+        cell.innerHTML = text;
+        if (input !== "" && lowerText.includes(input)) {
+            let regex = new RegExp(`(${input})`, "gi");
+            cell.innerHTML = text.replace(regex, `<span class="highlight">$1</span>`);
+        }
+    }
+}
+
+
+    </script>
+    
 </body>
 </html>

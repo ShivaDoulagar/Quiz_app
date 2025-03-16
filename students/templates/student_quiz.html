@@ -1,0 +1,19 @@
+{% extends "student_dashboard.html" %}
+
+{% block content %}
+<h3 class="text-center mt-3">Quiz</h3>
+<div class="quiz_container">
+
+</div>
+</div>
+
+<div id="timer"></div>
+
+<script>
+  let mail = "{{ mail }}"; // Ensure this variable is available in the template
+  let quiz_id = "{{ quiz_id }}";
+</script>
+
+<script src="{{ url_for('students.static', filename='js/students.js') }}"></script>
+
+{% endblock %}

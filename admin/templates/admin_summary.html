@@ -1,0 +1,89 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="chart-container">
+        <!-- Subject-wise Top Scores -->
+        <div class="chart-box">
+            <h3 class="highlight">Subject wise top scores</h3>
+            <canvas id="subjectChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h3 class="highlight">Month wise no. of quizzes attempted</h3>
+            <canvas id="monthChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch("/admin/summary/api")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const subjectLabels = data.top_scores.map(item => item[0]);  // Subject names
+                const subjectScores = data.top_scores.map(item => item[1]); // Scores
+
+                // Subject-wise Top Scores Chart
+                const ctx1 = document.getElementById('subjectChart').getContext('2d');
+new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: subjectLabels,
+        datasets: [{
+            label: 'Top Score',
+            data: subjectScores,
+            backgroundColor: ['#4CAF50', '#FF9800', '#2196F3', '#F44336'],
+            borderColor: '#333',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false, // Allow size adjustments
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10
+            }
+        }
+    }
+});
+
+                // Extracting Month-wise Quiz Attempts Data
+                const monthLabels = data.attemps.map(item => item[0]);  // Months (YYYY-MM)
+                const monthCounts = data.attemps.map(item => item[1]); // Count of quizzes attempted
+
+                // Month-wise Quiz Attempts Chart
+                const ctx2 = document.getElementById('monthChart').getContext('2d');
+                new Chart(ctx2, {
+                    type: 'pie',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'Quizzes Attempted',
+                            data: monthCounts,
+                            backgroundColor: ['#E57373', '#81C784', '#64B5F6', '#FFD54F'],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+{% endblock %}
