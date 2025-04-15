@@ -11,7 +11,7 @@
     />
     <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/style.css') }}">
 
-    <title>Admin-Dashboard</title>
+    <title>{{title}}</title>
     <style>
       nav {
         color: white;
@@ -120,7 +120,6 @@
         document.getElementById("quizIdInput").value = quizId; // Set value in hidden input
       });
     });
-    console.log("Hello")
     
       </script>
   </body>

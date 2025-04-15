@@ -6,11 +6,12 @@ from datetime import timedelta
 from werkzeug.security import generate_password_hash,check_password_hash
 from admin.admin import admin_bp
 from students.students import students_bp
-
+from sgpa.sgpa import sgpa_bp
 
 app = Flask(__name__)
 app.register_blueprint(admin_bp,url_prefix = "/admin")
 app.register_blueprint(students_bp,url_prefix = "/students")
+app.register_blueprint(sgpa_bp,url_prefix = "/sgpa")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
 app.config['SECRET_KEY'] = "quiz app made by me and very secure!!!!!"
@@ -28,8 +29,6 @@ def signin():
     elif request.method == "POST":
         mail = form.mail.data
         password = form.password.data
-
-        # Hardcoded admin credentials for testing
         if mail == 'admin@gmail.com' and password == 'adminadmin':
             session['user'] = {'role': 'admin', 'email': mail}
             return redirect(url_for('admin_dashboard'))
@@ -145,9 +144,16 @@ def register():
     return render_template('register.html',form = form,mail = mail,password = password,full_name = full_name,qualification= qualification,dob = dob)
 
 
+@app.errorhandler(404)
+def error_404(error):
+    return render_template("error_404.html",Error = "404 Error"),404
 
 
+
+@app.errorhandler(500)
+def error_500(error):
+    return render_template('internal_server_error.html',Error = "500 Error"),500
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=5000, debug=True)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(debug=True)

@@ -4,15 +4,16 @@ import datetime
 from collections import Counter
 
 
-students_bp = Blueprint(
-    "students", __name__, template_folder="templates", static_folder="static"
-)
+students_bp = Blueprint("students", __name__, template_folder="templates", static_folder="static")
 
 
 
 def user_name(mail):
     db = None
     try:
+        if "user" not in session or session["user"]["role"] != "student":
+            flash("Access denied! Please log in as a student.")
+            return redirect(url_for("signin"))
         db = sqlite3.connect("instance/quiz_master.db")
         cur = db.cursor()
         name = cur.execute(
@@ -31,7 +32,9 @@ def user_name(mail):
 @students_bp.route("/<mail>", methods=["GET", "POST"])
 def student_dashboard(mail):
     if request.method == "GET":
-        auth()
+        if "user" not in session or session["user"]["role"] != "student":
+            flash("Access denied! Please log in as a student.")
+            return redirect(url_for("signin"))
         db = None
         try:
             db = sqlite3.connect("instance/quiz_master.db")
@@ -52,6 +55,7 @@ def student_dashboard(mail):
                 date=str(datetime.date.today()),
                 name=name[0],
                 table=new_data,
+                title = "Student-Dashboard"
             )
 
         except Exception as e:
@@ -65,6 +69,9 @@ def student_dashboard(mail):
     else:
         db = None
         try:
+            if "user" not in session or session["user"]["role"] != "student":
+                flash("Access denied! Please log in as a student.")
+                return redirect(url_for("signin"))
             quiz_id = request.args.get("quiz_id")
             db = sqlite3.connect("instance/quiz_master.db")
             cur = db.cursor()
@@ -101,6 +108,9 @@ def student_dashboard(mail):
 @students_bp.route("<mail>/<int:quiz_id>", methods=["GET", "POST"])
 def quiz_page(mail, quiz_id):
     if request.method == "GET":
+        if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied!")
+                return redirect(url_for("signin"))
         try:
             db = sqlite3.connect("instance/quiz_master.db")
             cur = db.cursor()
@@ -132,7 +142,9 @@ def quiz_page(mail, quiz_id):
     elif request.method == "POST":
         db = None
         try:
-            
+            if "user" not in session or session["user"]["role"] != "student":
+                flash("Access denied! Please log in as a student.")
+                return redirect(url_for("signin"))
             db = sqlite3.connect("instance/quiz_master.db")
             cur = db.cursor()
             user = cur.execute('''
@@ -203,6 +215,9 @@ def quiz_page(mail, quiz_id):
 
 @students_bp.route("/<mail>/scores")
 def scores(mail):
+    if "user" not in session or session["user"]["role"] != "student":
+                flash("Access denied! Please log in as a student.")
+                return redirect(url_for("signin"))
     try:
         db = sqlite3.connect("instance/quiz_master.db")
         cur = db.cursor()
@@ -217,7 +232,7 @@ def scores(mail):
         )
         data = cur.fetchall()
         name = user_name(mail)
-        return render_template("scores.html", mail=mail, data=data,name = name[0])
+        return render_template("scores.html", mail=mail, data=data,name = name[0],title = "Scores")
     except Exception as e:
         flash(f"Error:{e}")
         return redirect(url_for("student_dashboard", mail=mail))
@@ -228,6 +243,9 @@ def scores(mail):
 
 @students_bp.route("/<mail>/summary")
 def summary(mail):
+    if "user" not in session or session["user"]["role"] != "student":
+                flash("Access denied! Please log in as a student.")
+                return redirect(url_for("signin"))
     try:
         db = sqlite3.connect("instance/quiz_master.db")
         cur = db.cursor()
@@ -242,7 +260,7 @@ def summary(mail):
         )
         data = cur.fetchall()
         name = user_name(mail)
-        return render_template("summary.html", mail=mail, data=data,name = name[0])
+        return render_template("summary.html", mail=mail, data=data,name = name[0],title = "Summary")
     except Exception as e:
         flash(f"Error:{e}")
         return redirect(url_for("student_dashboard", mail=mail))
@@ -253,6 +271,9 @@ def summary(mail):
 
 @students_bp.route("/<mail>/summary/api")
 def quiz_data(mail):
+    if "user" not in session or session["user"]["role"] != "student":
+                flash("Access denied! Please log in as a student.")
+                return redirect(url_for("signin"))
     try:
         db = sqlite3.connect("instance/quiz_master.db")
         cur = db.cursor()
@@ -277,7 +298,6 @@ def quiz_data(mail):
     JOIN users ON users.id = scores.user_id
     WHERE users.mail = ?
 """,(mail,),)
-
         quiz_month_attempts = cur.fetchall()
         dates = [
             datetime.datetime.strptime(ts[0], "%Y-%m-%d %H:%M:%S.%f").strftime("%B %Y")
@@ -298,7 +318,3 @@ def quiz_data(mail):
             db.close()
 
 
-def auth():
-    if "user" not in session or session["user"]["role"] != "student":
-        flash("Access denied! Please log in as a student.")
-        return redirect(url_for("signin"))

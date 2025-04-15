@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    padding: 0;
+  }
+  body{
+    background-color: black;
+  }
+  nav {
+    margin: 10px;
+
+    /* position: sticky; */
+    border-radius: 10px;
+  }
+
+  .main {
+    width: 100%;
+    display: flex;
+    background-color: black;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 1rem;
+  }
+  .sub {
+    width: 95vw;
+    padding: 1rem;
+    display: flex;
+    color: white;
+    background-color: black ;
+    border-radius: 10px;
+    /* justify-content: center; */
+    flex-direction: column;
+  }
+  .info {
+    padding: 2rem;
+    /* background-color: aliceblue; */
+    border-radius: 10px;
+    width: 100%;
+  }
+  .btn{
+    margin-bottom: 10px;
+  }
+  footer{
+    display: flex;
+    justify-content: center;
+    background-color: aliceblue;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+  button {
+    margin-top: 45px;
+  }
+
+
+  .features{
+    width: 100%;
+    /* background-color: white; */
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    
+  }
+
+  table{
+    width: 50vw;
+    border: 1px solid white;
+    margin-bottom: 20px;
+  }
+
+  tr{
+    border: 1px solid white;
+    /* text-align: center; */
+    
+   
+    
+  }
+
+  td{
+    border: 1px solid white;
+    /* text-align: center; */
+    text-align: start;
+    padding-left: 2%;
+  }
+
+  th{
+    border: 1px solid rgb(233, 228, 228);
+    font-size:large;
+    font-weight:500;
+  }
+
+  .result{
+    color: white;
+    margin-bottom: 30px;
+  }
+
+  @media screen and (max-width: 600px) {
+    table{
+      width: 90vw;
+    }
+  }

@@ -8,9 +8,11 @@ admin_bp = Blueprint("admin", __name__, static_folder='static', template_folder=
 
 @admin_bp.route('/addchapter', methods = ['POST'])
 def add_chapter():
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
-        # Path to the database
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
         db = sqlite3.connect(db_path)
         cur = db.cursor()
@@ -32,34 +34,29 @@ def add_chapter():
     finally:
         if db:
             db.close()
-# modella
+
 @admin_bp.route('/addSubject', methods=['POST'])
 def add_subject():
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         name = request.form['name']
         description = request.form['description']
-
-        
-        # Path to the database
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
         db = sqlite3.connect(db_path)
         cur = db.cursor()
-        
-        # Insert into subjects table
         cur.execute('''
             INSERT INTO subjects (subject_name, subject_description)
             VALUES (?, ?)
         ''', (name, description))
         db.commit()
-        
         flash(f"Successfully added subject: {name}")
         return redirect(url_for('admin_dashboard')) 
-
     except Exception as e:
         flash(f"Error: {e}")
         return redirect(url_for('admin_dashboard')) 
-
     finally:
         if db is not None:
             db.close()
@@ -92,8 +89,6 @@ def list_of_subjects():
             ORDER BY s.id, c.id
         ''')
         data = cur.fetchall()
-
-        # Organize data into a dictionary
         subjects = {}
         for row in data:
             subject_id, subject_name, subject_desc, chapter_id, chapter_name, chapter_desc = row
@@ -110,7 +105,7 @@ def list_of_subjects():
                     "chapter_description": chapter_desc
                 })
 
-        return render_template("subjects.html", subjects=subjects)
+        return render_template("subjects.html", subjects=subjects,title = "Admin-Dashboard")
 
     except Exception as e:
         flash(f"Something went wrong: {str(e)}")
@@ -121,6 +116,9 @@ def list_of_subjects():
 
 @admin_bp.route('/edit_chapter/<int:chapter_id>', methods=['GET', 'POST'])
 def edit_chapter(chapter_id):
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
@@ -131,7 +129,7 @@ def edit_chapter(chapter_id):
             new_name = request.form['chapter_name']
             new_desc = request.form['chapter_description']
 
-            # Update the chapter in the database
+            
             cur.execute(
                 "UPDATE chapters SET chapter_name = ?, chapter_description = ? WHERE id = ?",
                 (new_name, new_desc, chapter_id),
@@ -140,17 +138,17 @@ def edit_chapter(chapter_id):
             flash("Chapter updated successfully.")
             return redirect(url_for('admin_dashboard'))
 
-        # Fetch the chapter details for pre-filling the form
+        
         cur.execute("SELECT chapter_name, chapter_description FROM chapters WHERE id = ?", (chapter_id,))
         chapter = cur.fetchone()
-        # return f"{chapter}"
-        # Render the template with the chapter details
+        
+        
         return render_template('edit_chapter.html', chapter=chapter, chapter_id=chapter_id)
 
     except Exception as e:
         flash(f"Error: {e}")
         print(str(e))
-        return redirect(url_for('admin.admin_dashboard'))  # Ensure valid return on error
+        return redirect(url_for('admin.admin_dashboard'))  
 
     finally:
         if db:
@@ -160,13 +158,16 @@ def edit_chapter(chapter_id):
 
 @admin_bp.route('/delete_chapter/<int:chapter_id>', methods=['POST'])
 def delete_chapter(chapter_id):
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
         db = sqlite3.connect(db_path)
         cur = db.cursor()
 
-        # Delete the chapter
+        
         cur.execute("DELETE FROM chapters WHERE id = ?", (chapter_id,))
         db.commit()
 
@@ -181,45 +182,40 @@ def delete_chapter(chapter_id):
 
 @admin_bp.route('/quiz')
 def quiz():
-    auth()
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
         db = sqlite3.connect(db_path)
         cur = db.cursor()
-        
-        # Fetch all chapters
         chapters = cur.execute('''
             SELECT id, chapter_name
             FROM chapters
         ''').fetchall()
-
-        # Fetch all quizzes
         quizs = cur.execute('''
             SELECT q.id, c.chapter_name, q.date_of_quiz, q.time_duration
             FROM quiz AS q
             JOIN chapters AS c ON c.id = q.chapter_id
         ''').fetchall()
-
-        # Fetch all questions mapped to quizzes
         questions = cur.execute('''
             SELECT id, quiz_id, question_title
             FROM questions
         ''').fetchall()
-
-        # Organize questions by quiz_id
         questions_by_quiz = {}
         for question in questions:
             quiz_id = question[1]
             if quiz_id not in questions_by_quiz:
                 questions_by_quiz[quiz_id] = []
-            questions_by_quiz[quiz_id].append((question[0], question[2]))  # (id, question_title)
+            questions_by_quiz[quiz_id].append((question[0], question[2]))  
 
         return render_template(
             "quiz.html",
             chapters=chapters,
             quizs=quizs,
-            questions_by_quiz=questions_by_quiz  # Pass organized questions
+            questions_by_quiz=questions_by_quiz,
+            title = "Quiz"
         )
 
     except Exception as e:
@@ -234,6 +230,9 @@ def quiz():
 
 @admin_bp.route('/add_quiz',methods = ['GET','POST'])
 def add_quiz():
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
@@ -252,8 +251,6 @@ def add_quiz():
         db.commit()
         flash(f"Successfully added quiz: {chapter[1]}")
         return redirect(url_for('admin.quiz'))
-
-
     except Exception as e:
         flash(f"Error: {e}")
         return render_template(url_for("admin_dashboard"))
@@ -265,6 +262,9 @@ def add_quiz():
 
 @admin_bp.route('/add_question/',methods = ['POST'])
 def add_question():
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
@@ -304,7 +304,9 @@ def add_question():
 
 @admin_bp.route('/edit_question/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
-    auth()  # Ensure user authentication
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
@@ -320,10 +322,10 @@ def edit_question(question_id):
             option4 = request.form['option4']
             correct_option = request.form['correct_option']
 
-            # Convert options to string format
+            
             options = str([option1, option2, option3, option4, correct_option])
 
-            # Update the question in the database
+            
             cur.execute('''
                 UPDATE questions
                 SET question_title = ?, question = ?, options = ?
@@ -334,22 +336,17 @@ def edit_question(question_id):
             flash("Question updated successfully!")
             return redirect(url_for('admin.quiz'))
 
-        # Fetch existing question data for GET request
+        
         question_data = cur.execute('SELECT question_title, question, options FROM questions WHERE id = ?', (question_id,)).fetchone()
         
         if not question_data:
             flash("Question not found!")
             return redirect(url_for('admin.quiz'))
-
-        # Convert stored options from string back to list
-        options = eval(question_data[2]) if question_data[2] else [""] * 5  # Handle missing data
-        
+        options = eval(question_data[2]) if question_data[2] else [""] * 5 
         return render_template("edit_question.html", question_id=question_id, question_title=question_data[0], question=question_data[1], options=options)
-
     except Exception as e:
         flash(f"Error: {e}")
         return redirect(url_for('admin.quiz'))
-
     finally:
         if db:
             db.close()
@@ -357,17 +354,16 @@ def edit_question(question_id):
 
 @admin_bp.route('/delete_question/<int:question_id>', methods=['POST'])
 def delete_question(question_id):
-    auth()
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'instance', 'quiz_master.db')
         db = sqlite3.connect(db_path)
         cur = db.cursor()
-
-        # Delete the question
         cur.execute('DELETE FROM questions WHERE id = ?', (question_id,))
         db.commit()
-        
         flash("Question deleted successfully!")
         return redirect(url_for('admin.quiz'))
 
@@ -381,10 +377,16 @@ def delete_question(question_id):
 
 @admin_bp.route('/summary')
 def summary():
-    return render_template('admin_summary.html')
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
+    return render_template('admin_summary.html',title = "Summary")
 
 @admin_bp.route('/summary/api')
 def summary_api():
+    if "user" not in session or session["user"]["role"] != "admin":
+                flash("Access denied! Please log in as a admin")
+                return redirect(url_for("signin"))
     db = None
     try:
         db = sqlite3.connect('instance/quiz_master.db')
@@ -418,8 +420,3 @@ def summary_api():
 
 
 
-
-def auth():
-    if 'user' not in session or session['user']['role'] != 'admin':
-        flash("Access denied! Please log in as admin.")
-        return redirect(url_for('signin'))
