@@ -73,4 +73,13 @@ class Scores(db.Model):
     quiz = db.relationship('Quiz', backref='scores')
     user = db.relationship('Users', backref='scores')
 
-
+# class Jntu_scores(db.Model):
+#     __tablename__ = 'jntu_scores'
+    
+#     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+#     st_name = db.Column(db.String(60),nullable=False)
+#     st_roll_number = db.Column(db.String(60),nullable=False)
+#     st_sem = db.column(db.Integer,nullable=False)
+#     st_subject = db.column(db.String(60))
+#     st_grade = db.column(db.String(5))
+#     st_credit = db.Column(db.Interger)

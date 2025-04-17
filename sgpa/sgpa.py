@@ -1,4 +1,4 @@
-from flask import render_template, redirect, Blueprint, request, current_app
+from flask import render_template,redirect,Blueprint,request,current_app,url_for,flash
 import sgpa.conversion as conversion
 import os
 from werkzeug.utils import secure_filename
@@ -43,7 +43,8 @@ def main():
                 return render_template('result.html', result=calculated_sgpa, data=table_data)
 
             else:
-                return "Invalid file format. Please upload a PDF."
+                flash("Please upload a valid PDF file.")
+                return render_template("index.html")
 
     except Exception as e:
-        return f"Some error occurred! Please try again: {e}"
+        return redirect(url_for("main"))

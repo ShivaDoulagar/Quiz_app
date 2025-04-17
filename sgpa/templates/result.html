@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
 
+
     <title>PDF to DOCX Converter</title>
     <style>
      
@@ -30,6 +31,18 @@
         >
       </nav>
     </header>
+    {% for message in get_flashed_messages()%}
+
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {%endfor%}
     <div class="main">
       <div class="sub">
         <h4>Upload your result pdf file to find your SGPA</h4>
@@ -81,5 +94,6 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+
   </body>
 </html>
