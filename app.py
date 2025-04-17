@@ -7,6 +7,8 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from admin.admin import admin_bp
 from students.students import students_bp
 from sgpa.sgpa import sgpa_bp
+from db import db, migrate
+from models import *
 
 app = Flask(__name__)
 app.register_blueprint(admin_bp,url_prefix = "/admin")
@@ -15,6 +17,11 @@ app.register_blueprint(sgpa_bp,url_prefix = "/sgpa")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
 app.config['SECRET_KEY'] = "quiz app made by me and very secure!!!!!"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+db.init_app(app)
+migrate.init_app(app, db)
 
 
 
