@@ -1,17 +1,18 @@
 {% extends "student_dashboard.html" %}
- {% block content %}
- <div class="container border shadow rounded p-5">
-  <h2>Upcoming Quizzes</h2>
 
+ {% block content %}
+ <div class="outer_container container  rounded p-5">
+  <h2>Upcoming Quizzes</h2>
   <!-- Responsive Table Wrapper -->
   <div class="table-responsive rounded">
     <table class="table border  table-striped table-hover">
       <thead class="table-dark">
         <tr>
           <th scope="col">Id</th>
-          <th scope="col">Questions</th>
-          <th scope="col">Date</th>
-          <th scope="col">Duration</th>
+          <th scope="col">Title</th>
+          <th class="non" scope="col">Questions</th>
+          <th class="non" scope="col">Date</th>
+          <th class="non" scope="col">Duration</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -19,17 +20,19 @@
         {% for quiz in new_data %}
         <tr>
           <td>{{quiz[0]}}</td>
-          <td>{{quiz[1]}}</td>
-          <td>{{quiz[2]}}</td>
-          <td>{{quiz[3]}}</td>
+          <td>{{quiz[6] | capitalize}}</td>
+          <td class="non">{{quiz[1]}}</td>
+          <td class="non">{{quiz[2]}}</td>
+          <td class="non">{{quiz[3]}}</td>
           <td>
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex  gap-2">
               <!-- View Button -->
               <button 
                 class="btn btn-outline-success view-btn" 
                 data-bs-toggle="modal" 
                 data-bs-target="#viewmodal"
                 data-id="{{ quiz[0] }}" 
+                data-quiz_title = {{quiz[6]}}
                 data-subject="{{ quiz[5] }}" 
                 data-chapter="{{ quiz[4] }}" 
                 data-questions="{{ quiz[1] }}" 
@@ -79,26 +82,31 @@
               </tr>
               <tr>
                 <th scope="row">2</th>
+                <td>Title</td>
+                <td><span id="quiz-title"></span></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
                 <td>Subject:</td>
                 <td><span id="quiz-subject"></span></td>
               </tr>
               <tr>
-                <th scope="row">3</th>
+                <th scope="row">4</th>
                 <td>Chapter:</td>
                 <td><span id="quiz-chapter"></span></td>
               </tr>
               <tr>
-                <th scope="row">4</th>
+                <th scope="row">5</th>
                 <td>Number of questions:</td>
                 <td><span id="quiz-questions"></span></td>
               </tr>
               <tr>
-                <th scope="row">5</th>
+                <th scope="row">6</th>
                 <td>Scheduled Date:</td>
                 <td><span id="quiz-date"></span></td>
               </tr>
               <tr>
-                <th scope="row">6</th>
+                <th scope="row">7</th>
                 <td>Duration:</td>
                 <td><span id="quiz-duration"></span> Hours</td>
               </tr>
@@ -109,6 +117,5 @@
     </div>
   </div>
 </div>
-
 
 {% endblock %}

@@ -31,7 +31,8 @@ def signin():
     form = Signin_form()
 
     if request.method == "GET":
-        return render_template('login.html', form=form)
+        # return render_template('login.html', form=form)
+        return render_template('login.html',form = form)
 
     elif request.method == "POST":
         mail = form.mail.data

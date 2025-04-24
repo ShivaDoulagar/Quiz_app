@@ -4,6 +4,7 @@
     align-items: center;
     margin-top: 20px;
     flex-wrap: wrap;
+    min-width:100px ;
 }
 
 .chart-box {
@@ -22,4 +23,29 @@
 canvas {
     width: 100% !important;  
     height: 250px !important; 
+}
+
+
+
+.edit_btn{
+    width: 2rem;
+}
+
+
+
+@media (max-width: 768px) {
+    
+    .chart-container {
+        flex-direction: column; 
+        align-items: center;
+        gap: 2rem;
+        font-size: 60%;
+    }
+
+    .chart-box {
+        width: 95%;
+    }
+    .chat_cont{
+        margin-top: -60px;
+    }
 }

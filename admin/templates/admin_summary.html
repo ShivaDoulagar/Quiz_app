@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <div class="chart-container">
+    <div class="chart-container d-flex">
         <!-- Subject-wise Top Scores -->
         <div class="chart-box">
             <h3 class="highlight">Subject wise top scores</h3>
@@ -22,7 +22,6 @@
         fetch("/admin/summary/api")
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 const subjectLabels = data.top_scores.map(item => item[0]);  // Subject names
                 const subjectScores = data.top_scores.map(item => item[1]); // Scores
 
@@ -42,7 +41,7 @@ new Chart(ctx1, {
     },
     options: {
         responsive: true,
-        maintainAspectRatio: false, // Allow size adjustments
+        maintainAspectRatio: true, // Allow size adjustments
         scales: {
             y: {
                 beginAtZero: true

@@ -3,6 +3,7 @@ import sqlite3
 import os
 import ast
 
+
 admin_bp = Blueprint("admin", __name__, static_folder='static', template_folder="templates")
 
 
@@ -195,7 +196,7 @@ def quiz():
             FROM chapters
         ''').fetchall()
         quizs = cur.execute('''
-            SELECT q.id, c.chapter_name, q.date_of_quiz, q.time_duration
+            SELECT q.id, c.chapter_name, q.date_of_quiz, q.time_duration,q.quiz_title
             FROM quiz AS q
             JOIN chapters AS c ON c.id = q.chapter_id
         ''').fetchall()
@@ -242,17 +243,19 @@ def add_quiz():
         chapter = request.form['chapter']
         chapter = ast.literal_eval(chapter)
         chapter = list(chapter)
+        quiz_title = request.form['quiz_title']
         date = request.form['date']
         time = request.form['time']
         cur.execute('''
-                INSERT INTO quiz(chapter_id,date_of_quiz,time_duration)
-                    VALUES(?,?,?)
-        ''',(chapter[0],date,time))
+                INSERT INTO quiz(chapter_id,date_of_quiz,time_duration,quiz_title)
+                    VALUES(?,?,?,?)
+        ''',(chapter[0],date,time,quiz_title))
         db.commit()
         flash(f"Successfully added quiz: {chapter[1]}")
         return redirect(url_for('admin.quiz'))
     except Exception as e:
         flash(f"Error: {e}")
+        print(e)
         return render_template(url_for("admin_dashboard"))
     finally:
         if db:
@@ -418,5 +421,35 @@ def summary_api():
         if db is not None:
             db.close()
 
+
+
+
+
+@admin_bp.route('/edit_quiz',methods = ['GET','POST'])
+def edit_quiz():
+    if request.method == "GET":
+        quiz_id = request.args.get('quiz_id')
+        quiz_title = request.args.get('quiz_title')
+        quiz_date =request.args.get('quiz_date')
+        quiz_duration=request.args.get('quiz_duration')
+        return render_template("edit_quiz.html",quiz_id = quiz_id,quiz_title = quiz_title,quiz_date = quiz_date,quiz_duration= quiz_duration)
+    else:
+        db = None
+        try:
+            db = sqlite3.connect('instance/quiz_master.db')
+            cur = db.cursor()
+            data = request.form
+            cur.execute(''' 
+                    UPDATE quiz SET quiz_title = ?,date_of_quiz = ?,time_duration = ? WHERE id = ?
+            ''',(data['quiz_title'],data['quiz_date'],data['quiz_duration'],data['quiz_id']))
+            db.commit()
+            flash("Successfully updated!!")
+            return redirect(url_for('admin.quiz'))
+        except Exception as e:
+             flash(f"Some error has occured: {e}") 
+             return redirect(url_for('admin.quiz'))
+        finally:
+            if db is not None:
+                db.close()
 
 

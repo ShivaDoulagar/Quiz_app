@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="icon" href="{{url_for('static',filename='images/teacher.png')}}">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
@@ -86,7 +87,7 @@
     </nav>
     {% for message in get_flashed_messages()%}
 
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
       {{message}}
       <button
         type="button"

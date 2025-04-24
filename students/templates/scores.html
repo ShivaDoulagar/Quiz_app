@@ -1,36 +1,32 @@
 {% extends "student_dashboard.html" %}
 
+
 {% block content %}
-
-    <div class="main">
-        <div class="container shadow  rounded p-3">
-            <h1 class="mb-4" >Quiz scores</h1>
-            <table class="table table-striped p-1 border ">
-                <thead>
-                  <tr>
-                    <th scope="col">Quiz Id</th>
-                    <th scope="col">Number of questions</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {%for quiz in data %}
-                  <tr>
-                    <td>{{quiz[0]}}</td>
-                    <td>{{quiz[2]}}</td>
-                    <td>{{quiz[3][:10] }}</td>
-                    <td style="color: red ;"  >{{quiz[1]}}</td>
-                  </tr>
-                  {% endfor %}
-                  <tr>
-                    <td>{{Mark}}</td>
-                    <td>{{Otto}}</td>
-                    <td>{{mdo}}</td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>
-    </div>
-
+<div class="main">
+  <div class="container shadow  rounded p-3">
+      <h1 class="mb-4" >Quiz scores</h1>
+      <table class="table table-striped p-1 border ">
+          <thead>
+            <tr>
+              <th scope="col">Quiz Id</th>
+              <th scope="col">Quiz title</th>
+              <th scope="col">Number of questions</th>
+              <th scope="col">Date</th>
+              <th scope="col">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for quiz in data %}
+            <tr>
+              <td>{{quiz[0]}}</td>
+              <td>{{quiz[4]}}</td>
+              <td>{{quiz[2]}}</td>
+              <td>{{quiz[3][:10] }}</td>
+              <td style="color: red ;"  >{{quiz[1]}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+  </div>
+</div>
 {% endblock %}

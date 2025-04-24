@@ -1,0 +1,29 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<div class="container">
+    <h2>Edit Question</h2>
+    <form method="POST" action="{{url_for('admin.edit_quiz')}}">
+        <input type="hidden" name="quiz_id" value="{{quiz_id}}">
+        <!-- quiz title -->
+      <div class="mb-3">
+        <label for="quiz_title" class="form-label">Quiz Title</label>
+        <input type="text" class="form-control" id="quiz_title" name="quiz_title" value="{{ quiz_title }}" required>
+      </div>
+      <!-- quiz date -->
+      <div class="mb-3">
+        <label for="quiz_date" class="form-label">Quiz Date</label>
+        <input type="date" class="form-control" id="quiz_date" name="quiz_date" value="{{ quiz_date }}" required>
+      </div>
+      <!-- quiz duration -->
+      <div class="mb-3">
+        <label for="quiz_duration" class="form-label">Quiz Duration</label>
+        <input type="time" class="form-control" id="quiz_duration" name="quiz_duration" value="{{ quiz_duration }}" required>
+      </div>
+      
+      
+      
+      <button type="submit" class="btn btn-primary">Update</button>
+      <a href="{{ url_for('admin.quiz') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

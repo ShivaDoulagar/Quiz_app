@@ -40,7 +40,7 @@ def student_dashboard(mail):
             db = sqlite3.connect("instance/quiz_master.db")
             cur = db.cursor()
             new_data = cur.execute("""
-                SELECT  quiz.id,COUNT(questions.quiz_id),quiz.date_of_quiz,quiz.time_duration,chapters.chapter_name,subjects.subject_name
+                SELECT  quiz.id,COUNT(questions.quiz_id),quiz.date_of_quiz,quiz.time_duration,chapters.chapter_name,subjects.subject_name,quiz.quiz_title
                                 FROM quiz
                                 LEFT JOIN questions ON quiz.id = questions.quiz_id
                                 LEFT JOIN chapters ON chapters.id = questions.chapter_id
@@ -108,9 +108,6 @@ def student_dashboard(mail):
 @students_bp.route("<mail>/<int:quiz_id>", methods=["GET", "POST"])
 def quiz_page(mail, quiz_id):
     if request.method == "GET":
-        if "user" not in session or session["user"]["role"] != "admin":
-                flash("Access denied!")
-                return redirect(url_for("signin"))
         try:
             db = sqlite3.connect("instance/quiz_master.db")
             cur = db.cursor()
@@ -223,9 +220,10 @@ def scores(mail):
         cur = db.cursor()
         cur.execute(
             """
-                SELECT scores.quiz_id,scores.total_score,number_of_questions,scores.time
+                SELECT scores.quiz_id,scores.total_score,number_of_questions,scores.time,quiz.quiz_title
                     FROM scores 
                     JOIN users on users.id  = scores.user_id
+                    JOIN quiz on quiz.id = scores.quiz_id
                     WHERE users.mail = ? 
         """,
             (mail,),

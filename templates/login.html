@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="icon" href="{{url_for('static',filename='images/student.png')}}">
     <meta charset="UTF-8" />
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -76,12 +81,14 @@
   align-items: center;
   background-color: white;
   visibility: hidden;
+  z-index: 2020;
 }
     </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-dark">
-      <div class="container-fluid">
+      <div class="container-fluid ps-4 gap-3">
+        <img src="{{url_for('static',filename='images/student.png')}}" alt="logo" width="30" height="24" class="d-inline-block align-text-top">
         <a class="navbar-brand fs-3 text-light" href="/">Quiz Master</a>
         <button
           class="navbar-toggler"
@@ -99,7 +106,7 @@
     </nav>
     {% for message in get_flashed_messages()%}
 
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
       {{message}}
       <button
         type="button"
@@ -117,20 +124,36 @@
       {{added}}
       <div class="Signin_box rounded-1 shadow p-5">
         <h1 class="pb-4">Signin</h1>
-        <form method="POST" action="/">
-          {{form.hidden_tag()}} {{form.mail.label(class="form-label")}}
-          {{form.mail(class="form-control mail")}}
-          <br />
-          {{form.password.label(class="form-label")}}
-          {{form.password(class="form-control password")}}
-          <br />
-          <div
-            class="d-flex flex-column align-items-center justify-content-center gap-3"
-          >
-            {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2",onclick = "loading()" )}}
+        <form method="POST" action="/" style="background-color: whitesmoke;">
+          {{form.hidden_tag()}}
+        
+          <!-- Email input with icon -->
+          <label class="form-label">{{form.mail.label.text}}</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">
+              <i class="bi bi-envelope-fill"></i> <!-- Bootstrap icon -->
+            </span>
+            {{form.mail(class="form-control mail")}}
+          </div>
+        
+          <!-- Password input with icon and show/hide toggle -->
+          <label class="form-label">{{form.password.label.text}}</label>
+          <div class="input-group mb-4">
+            <span class="input-group-text">
+              <i class="bi bi-lock-fill"></i> <!-- Bootstrap icon -->
+            </span>
+            {{form.password(class="form-control password", id="password-input")}}
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" tabindex="-1">
+              <i id="toggle-icon" class="bi bi-eye"></i>
+            </button>
+          </div>
+        
+          <div class="d-flex flex-column align-items-center justify-content-center gap-3">
+            {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2", onclick="loading()")}}
             <a style="color: black" href="/register">Register?</a>
           </div>
         </form>
+        
       </div>
     </div>
 
@@ -149,7 +172,22 @@
     if (mail != "" && password != ""){
       load.style.visibility = "visible";
     } 
+    
 }
+function togglePassword() {
+    const passwordInput = document.getElementById('password-input');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleIcon.classList.remove("bi-eye");
+      toggleIcon.classList.add("bi-eye-slash");
+    } else {
+      passwordInput.type = "password";
+      toggleIcon.classList.remove("bi-eye-slash");
+      toggleIcon.classList.add("bi-eye");
+    }
+  }
 
     </script>
 

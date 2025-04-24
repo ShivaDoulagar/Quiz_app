@@ -15,6 +15,7 @@ os.makedirs(CONVERTED_FOLDER, exist_ok=True)
 
 @sgpa_bp.route('/', methods=["GET", "POST"])
 def main():
+    mail = request.args.get('mail')
     try:
         if request.method == 'GET':
             return render_template("index.html")

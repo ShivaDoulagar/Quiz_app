@@ -69,3 +69,14 @@ canvas {
     color: black;
     font-weight: bold;
 }
+
+
+
+@media only screen and (max-width: 768px) {
+    .non{
+        display: none;
+    }
+    .outer_container{
+        padding: 10px !important;
+    }
+  }
