@@ -80,3 +80,28 @@ canvas {
         padding: 10px !important;
     }
   }
+
+
+  .sidebar {
+    height: 100vh;
+    border-right: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+  }
+
+  .nav-link.active {
+    font-weight: bold;
+    color: #0d6efd !important;
+    background-color: #e9ecef;
+  }
+
+  .nav-link:hover {
+    background-color: #f1f1f1;
+  }
+
+  .main-content {
+    padding: 2rem;
+  }
+
+  .highlight {
+    background-color: yellow;
+  }

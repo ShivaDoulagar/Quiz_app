@@ -2,142 +2,139 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="{{url_for('static',filename='images/student.png')}}">
+    <link rel="icon" href="{{ url_for('static', filename='images/student.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('students.static', filename='css/style.css') }}"
-    />
-    <title>{{title}}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('students.static', filename='css/style.css') }}" />
+
+    <title>{{ title }}</title>
+
+    <style>
+      .sidebar {
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        min-height: 100vh;
+      }
+
+      .nav-link.active {
+        font-weight: bold;
+        background-color: #e9ecef;
+        color: #0d6efd !important;
+      }
+
+      .nav-link:hover {
+        background-color: #f1f1f1;
+      }
+
+      .main-content {
+        padding: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1rem;
+        }
+      }
+
+      .alert {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        max-width: 300px;
+        z-index: 1050;
+      }
+    </style>
   </head>
+
   <body>
-    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd">
-      <div class="container-fluid">
-        <a
-          class="navbar-brand"
-          href="{{url_for('students.student_dashboard',mail = mail)}}"
-          >Quiz Master</a
-        >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top" style="background-color: #e3f2fd">
+      <div class="container-fluid ps-3 gap-2">
+        <!-- Sidebar toggle for mobile -->
+        <button class="btn btn-outline-primary d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarToggle">
+          ☰
+        </button>
+
+        <img src="{{ url_for('static', filename='images/student.png') }}" alt="logo" width="30" class="d-inline-block align-text-top" />
+        <a class="navbar-brand" href="{{ url_for('students.student_dashboard', mail=mail) }}">Quiz Master</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="{{url_for('students.student_dashboard',mail = mail)}}"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="{{url_for('students.scores',mail = mail)}}"
-                >Scores</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="{{url_for('students.summary',mail = mail)}}"
-                >Summary</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="{{url_for('sgpa.main',mail = mail)}}"
-                >Jntuh SGPA Calculators</a
-              >
-            </li>
 
-            <li class="nav-item">
-              {% if 'user' in session %}
-              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-              {% else %}
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+          <span class="navbar-text fw-bold me-3">Welcome {{ name|capitalize }}</span>
+          <span>
+            {% if 'user' in session %}
+              <a class="navbar-brand" href="{{ url_for('logout') }}">
+                <img src="{{ url_for('static', filename='images/logout.png') }}" width="30" alt="logout" />
+              </a>
+            {% else %}
               <a href="{{ url_for('signin') }}">Login</a>
-              {% endif %}
-            </li>
-          </ul>
-          <form class="d-flex" role="search" onsubmit="searchContent(event)">
-            <input
-              id="searchInput"
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-              onkeyup="highlightSearch()"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
-          <span class="navbar-text ms-5 me-3">
-            Welcome {{name|capitalize}}
+            {% endif %}
           </span>
         </div>
       </div>
     </nav>
 
-    {% for message in get_flashed_messages()%}
+    <!-- Flash messages -->
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-primary alert-dismissible fade show m-3" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
 
-    <div class="alert alert-primaryalert-dismissible fade show" role="alert">
-      {{message}}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
-    {%endfor%}
+    <!-- Main Layout with Sidebar -->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar (collapsible on mobile) -->
+        <nav id="sidebarToggle" class="col-md-3 col-lg-2 d-md-block sidebar collapse show">
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'students.student_dashboard' %}active{% endif %}" href="{{ url_for('students.student_dashboard', mail=mail) }}">
+                  🏠 Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'students.scores' %}active{% endif %}" href="{{ url_for('students.scores', mail=mail) }}">
+                  📊 Scores
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'students.summary' %}active{% endif %}" href="{{ url_for('students.summary', mail=mail) }}">
+                  📋 Summary
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'sgpa.main' %}active{% endif %}" href="{{ url_for('sgpa.main', mail=mail) }}">
+                  🎓 SGPA Calculators
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
-    <div class="main">
-      <div class="container mt-5">
-        <div id="subjects-container" class="row g-4 mt-4">
-          {% block content %} {% endblock %}
-        </div>
+        <!-- Main Content Area -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+          {% block content %}
+          {% endblock %}
+        </main>
       </div>
     </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pzjw8f+ua7Kw1TIq0p6+URqqzMlTquC2kz88u7xaZsU6xVfIuOd1i9a2gx6HzYlF"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const viewButtons = document.querySelectorAll(".view-btn");
 
         viewButtons.forEach((button) => {
           button.addEventListener("click", function () {
-            // Get data attributes from clicked button
             const quizId = button.getAttribute("data-id");
             const subject = button.getAttribute("data-subject");
             const chapter = button.getAttribute("data-chapter");
@@ -146,7 +143,6 @@
             const duration = button.getAttribute("data-duration");
             const quiz_title = button.getAttribute("data-quiz_title");
 
-            // Set modal content
             document.getElementById("quiz-id").textContent = quizId;
             document.getElementById("quiz-title").textContent = quiz_title;
             document.getElementById("quiz-subject").textContent = subject;
@@ -157,37 +153,18 @@
           });
         });
       });
-      document.querySelector(".search").addEventListener("input", function () {
-        let searchValue = this.value.toLowerCase();
-        let items = document.querySelectorAll(".searchable-item"); // Target only relevant items
-
-        items.forEach((item) => {
-          if (item.textContent.toLowerCase().includes(searchValue)) {
-            item.style.display = "block"; // Show matching items
-          } else {
-            item.style.display = "none"; // Hide non-matching items
-          }
-        });
-      });
 
       function highlightSearch() {
-        let input = document
-          .getElementById("searchInput")
-          .value.trim()
-          .toLowerCase();
+        let input = document.getElementById("searchInput").value.trim().toLowerCase();
         let table = document.querySelector("table");
         let cells = table.getElementsByTagName("td");
 
         for (let cell of cells) {
           let text = cell.innerText;
-          let lowerText = text.toLowerCase();
           cell.innerHTML = text;
-          if (input !== "" && lowerText.includes(input)) {
+          if (input !== "" && text.toLowerCase().includes(input)) {
             let regex = new RegExp(`(${input})`, "gi");
-            cell.innerHTML = text.replace(
-              regex,
-              `<span class="highlight">$1</span>`
-            );
+            cell.innerHTML = text.replace(regex, `<span class="highlight">$1</span>`);
           }
         }
       }

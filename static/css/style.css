@@ -1,81 +1,112 @@
-main{
+body {
+  background-color: white;
+}
+.body_of_sigin {
   width: 100%;
-  height: 92vh;
-  background-color: #151c26;
+  height: 85vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+a {
+  color: white;
+  text-decoration: none;
+}
+.Signin_box {
+  width: 35vw;
+  min-width: 35px;
+  background-color: #f4f4f4;
+  margin: 0px 0px 0px 0px;
 }
 
-*{
-    background-color: #151c26;
-}
-
-.left{
-    width: 50vw;
-    height: 80vh;
-}
-
-
-.right{
-    width: 50vw;
-    height: 85vh;
-    padding: 2rem;
-}
-
-.right > img{
-    width: 85%;
-    min-width: 540px;
-    border-radius: 1rem;
-    object-fit:cover;
-}
-
-nav{
-    background-color: #151c26;
-}
-
-
-.login{
-    width: 70%;
-    
-}
-
-
-.Signin_box{
-    background-color: #0D1117;
-    height: 60vh;
-    color: white;
-}
-
-.wi > *{
-    /* color: white; */
-    background-color: #0D1117;
-}
-
-
-.login_box{
-    background-color: #0D1117;
-}
-
-label{
-    background-color: transparent;
-}
-
-.wi{
-    width: 100%;
-    background-color: #0D1117;
-}
-
-.register{
-    background-color: #0D1117;
-    color: white;
-}
-
-
-@media only screen and (min-width: 600px) {
-    .right{
-        display: none;
-    }
+@media screen and (max-width: 950px) {
+  .Signin_box {
+    /* background-color: lightgreen; */
+    width: 90vw;
   }
+}
+.alert {
+  position: absolute;
+  top: 90px;
+  right: 20px;
+  max-width: 300px;
+  margin: 0;
+  z-index: 1050;
+}
+.loader {
+  width: 60px;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
 
+.loading {
+  position: absolute;
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  visibility: hidden;
+  z-index: 2020;
+}
 
-input{
-    background-color: #0D1117;
+/* From Uiverse.io by alexroumi */
+.submit {
+  padding: 10px 25px;
+  border: unset;
+  border-radius: 15px;
+  color: white;
+  z-index: 1;
+  background: #0d1117;
+  position: relative;
+  font-weight: 700;
+  font-size: 17px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+  overflow: hidden;
+}
+
+.submit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  border-color: transparent;
+  background-color: white;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(236, 236, 236, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(235, 235, 235, 0.27);
+  transition: all 250ms;
+}
+
+.submit:hover {
+  color: #0d1117;
+}
+
+.submit:hover::before {
+  width: 100%;
 }

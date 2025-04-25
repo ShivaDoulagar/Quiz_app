@@ -14,76 +14,10 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <title>Quiz Master-login</title>
-    <style>
-      body {
-        background-color: white;
-      }
-      .body_of_sigin {
-        width: 100%;
-        height: 85vh;
-        background-color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      a {
-        color: white;
-        text-decoration: none;
-      }
-      .Signin_box {
-        width: 35vw;
-        min-width: 35px;
-        background-color: #f4f4f4;
-        margin: 0px 0px 0px 0px;
-      }
-      
-      @media screen and (max-width: 950px) {
-        .Signin_box {
-          /* background-color: lightgreen; */
-          width: 90vw;
-        }
-      }
-      .alert {
-        position: absolute;
-        top: 90px; 
-        right: 20px; 
-        max-width: 300px; 
-        margin: 0; 
-        z-index: 1050; 
-      }
-      /* HTML: <div class="loader"></div> */
-.loader {
-  width: 60px;
-  aspect-ratio: 2;
-  --_g: no-repeat radial-gradient(circle closest-side,#000 90%,#0000);
-  background: 
-    var(--_g) 0%   50%,
-    var(--_g) 50%  50%,
-    var(--_g) 100% 50%;
-  background-size: calc(100%/3) 50%;
-  animation: l3 1s infinite linear;
-}
-@keyframes l3 {
-    20%{background-position:0%   0%, 50%  50%,100%  50%}
-    40%{background-position:0% 100%, 50%   0%,100%  50%}
-    60%{background-position:0%  50%, 50% 100%,100%   0%}
-    80%{background-position:0%  50%, 50%  50%,100% 100%}
-}
 
-.loading{
-  position: absolute;
-  width: 100%;
-  height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  visibility: hidden;
-  z-index: 2020;
-}
-    </style>
+    <link rel="stylesheet" href="{{url_for('static',filename = 'css/style.css')}}">
+    <title>Quiz Master-login</title>
+
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-dark">
@@ -106,7 +40,7 @@
     </nav>
     {% for message in get_flashed_messages()%}
 
-    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
       {{message}}
       <button
         type="button"
@@ -149,7 +83,8 @@
           </div>
         
           <div class="d-flex flex-column align-items-center justify-content-center gap-3">
-            {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2", onclick="loading()")}}
+            <!-- {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2", onclick="loading()")}} -->
+            <button type="submit" class="submit" onclick="loading()">Login</button>
             <a style="color: black" href="/register">Register?</a>
           </div>
         </form>

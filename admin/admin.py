@@ -33,8 +33,7 @@ def add_chapter():
         print(str(e))
         return redirect(url_for('admin.admin_dashboard'))
     finally:
-        if db:
-            db.close()
+        if db: db.close()
 
 @admin_bp.route('/addSubject', methods=['POST'])
 def add_subject():
@@ -451,5 +450,50 @@ def edit_quiz():
         finally:
             if db is not None:
                 db.close()
+
+
+
+
+@admin_bp.route('/delete_quiz',methods = ['POST'])
+def delete_quiz():
+    quiz_id = request.args.get('quiz_id')
+    db = None
+    try:
+        db = sqlite3.connect('instance/quiz_master.db')
+        cur = db.cursor()
+        cur.execute('''
+            DELETE FROM Quiz WHERE id = ?   
+
+        ''',(quiz_id,))
+        db.commit()
+        flash("Quiz deleted successfully")
+        return redirect(url_for('admin.quiz'))
+    except Exception as e:
+        flash(f'Some error has occured:{e}')
+    finally:
+        if db is not None:
+            db.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1,14 +1,29 @@
-.chart-container {
+/* ========== General Layout ========== */
+body {
+    background: #f8f9fa;
+  }
+  
+  .row {
+    min-height: 80vh;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 250px !important;
+  }
+  
+  /* ========== Chart Styles ========== */
+  .chart-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin-top: 20px;
     flex-wrap: wrap;
-    min-width:100px ;
-}
-
-.chart-box {
-    width: 40%;  
+    min-width: 100px;
+  }
+  
+  .chart-box {
+    width: 40%;
     height: 300px;
     display: flex;
     flex-direction: column;
@@ -18,34 +33,139 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 2px 2px 10px #ccc;
-}
-
-canvas {
-    width: 100% !important;  
-    height: 250px !important; 
-}
-
-
-
-.edit_btn{
-    width: 2rem;
-}
-
-
-
-@media (max-width: 768px) {
-    
+  }
+  
+  @media (max-width: 768px) {
     .chart-container {
-        flex-direction: column; 
-        align-items: center;
-        gap: 2rem;
-        font-size: 60%;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      font-size: 60%;
     }
-
+  
     .chart-box {
-        width: 95%;
+      width: 95%;
     }
-    .chat_cont{
-        margin-top: -60px;
+  
+    .chat_cont {
+      margin-top: -60px;
     }
-}
+  }
+  
+  /* ========== Button & Icon Utilities ========== */
+  .edit_btn {
+    width: 2rem;
+  }
+  
+  .edit_btn2 {
+    height: 2.9rem;
+  }
+  
+  .icons {
+    height: 0.7em;
+  }
+  
+  .w100 {
+    width: 30%;
+  }
+  
+  /* ========== Subject & Quiz Card Styles ========== */
+  .subject-card,
+  .quiz-card {
+    border-left: 6px solid #6c63ff;
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #ffffff, #f3f6ff);
+  }
+  
+  .subject-card:hover,
+  .quiz-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+  }
+  
+  .card-title {
+    color: #4e54c8;
+    font-weight: 600;
+  }
+  
+  /* ========== Buttons ========== */
+  .btn-primary {
+    background-color: #6c63ff;
+    border: none;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4e54c8;
+  }
+  
+  .btn-secondary {
+    background-color: #ff6584;
+    border: none;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e14d65;
+  }
+  
+  .btn-glow {
+    background-color: #6c63ff;
+    border: none;
+    color: white;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-glow:hover {
+    background-color: #4e54c8;
+    box-shadow: 0 0 15px rgba(108, 99, 255, 0.5);
+  }
+  
+  /* ========== Table Styling ========== */
+  .table-striped tbody tr:nth-child(odd),
+  .accordion-body table tr:nth-child(odd) {
+    background-color: #f2f3ff;
+  }
+  
+  .table-striped tbody tr:nth-child(even),
+  .accordion-body table tr:nth-child(even) {
+    background-color: #ffffff;
+  }
+  
+  .table th,
+  .table td {
+    vertical-align: middle;
+  }
+  
+  /* ========== Accordion ========== */
+  .accordion-button {
+    background-color: #6c63ff;
+    color: white;
+    font-weight: 500;
+  }
+  
+  .accordion-button:not(.collapsed) {
+    background-color: #4e54c8;
+  }
+  
+  /* ========== Modals ========== */
+  .modal-content {
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ========== Alerts ========== */
+  .alert-container {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 300px;
+  }
+  
+
+
+

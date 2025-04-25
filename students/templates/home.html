@@ -1,8 +1,8 @@
 {% extends "student_dashboard.html" %}
 
  {% block content %}
- <div class="outer_container container  rounded p-5">
-  <h2>Upcoming Quizzes</h2>
+ <div class="outer_container container mb-4  rounded ">
+  <h2>Quizzes</h2>
   <!-- Responsive Table Wrapper -->
   <div class="table-responsive rounded">
     <table class="table border  table-striped table-hover">
@@ -117,5 +117,83 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+<!-- summary -->
+<div class="container d-flex justify-content-center align-items-center">
+
+<div class=" d-flex  container chat_cont mb-5">
+  <div class="chart-container">
+      <div class="chart-box ">
+          <h3>Subject wise quiz attempts</h3>
+          <canvas id="subjectChart"></canvas>
+      </div>
+      <div class="chart-box p-5">
+          <h3>Month wise no.quizzes attempted</h3>
+          <canvas id="monthChart"></canvas>
+      </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      fetch("/students/{{ mail }}/summary/api")  
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);  
+              const subjectLabels = data.subject_attempts.map(item => item[0]);
+              const subjectValues = data.subject_attempts.map(item => item[1]);
+              const monthLabels = Object.keys(data.monthly_attempts);
+              const monthValues = Object.values(data.monthly_attempts);
+              console.log(subjectLabels);
+              console.log(subjectValues);
+              console.log(monthLabels);
+              console.log(monthValues);
+
+              // Subject-wise Bar Chart
+              new Chart(document.getElementById("subjectChart"), {
+                  type: "bar",
+                  data: {
+                      labels: subjectLabels,
+                      datasets: [{
+                          label: "Number of Quizzes",
+                          data: subjectValues,
+                          backgroundColor: ["#4CAF50", "#FFC107", "#00BCD4"]
+                      }]
+                  },
+                  options: {
+                      responsive: true,
+                      plugins: {
+                          legend: { display: false }
+                      }
+                  }
+              });
+
+              // Month-wise Pie Chart
+              new Chart(document.getElementById("monthChart"), {
+                  type: "pie",
+                  data: {
+                      labels: monthLabels,
+                      datasets: [{
+                          data: monthValues,
+                          backgroundColor: ["#ff9999", "#66b3ff", "#99ff99", "#ffcc99"]
+                      }]
+                  }
+              });
+
+          })
+          .catch(error => console.error("Error fetching data:", error));
+  });
+</script>
 
 {% endblock %}
