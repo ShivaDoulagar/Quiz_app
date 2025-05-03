@@ -3,27 +3,517 @@
   <head>
     <link rel="icon" href="{{url_for('static',filename='images/student.png')}}">
     <meta charset="UTF-8" />
-    <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <style>
+      :root {
+        --primary-color: #4e54c8;
+        --primary-light: #8f94fb;
+        --secondary-color: #f9f9f9;
+        --text-dark: #333;
+        --text-light: #f9f9f9;
+        --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
 
-    <link rel="stylesheet" href="{{url_for('static',filename = 'css/style.css')}}">
-    <title>Quiz Master-login</title>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f7fe;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        position: relative;
+      }
 
+      /* Animated Background */
+      .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .circles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .circles li {
+        position: absolute;
+        display: block;
+        list-style: none;
+        width: 20px;
+        height: 20px;
+        background: rgba(78, 84, 200, 0.1);
+        animation: animate 25s linear infinite;
+        bottom: -150px;
+        border-radius: 50%;
+      }
+
+      .circles li:nth-child(1) {
+        left: 25%;
+        width: 80px;
+        height: 80px;
+        animation-delay: 0s;
+        animation-duration: 20s;
+        background: rgba(143, 148, 251, 0.1);
+      }
+
+      .circles li:nth-child(2) {
+        left: 10%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 2s;
+        animation-duration: 12s;
+      }
+
+      .circles li:nth-child(3) {
+        left: 70%;
+        width: 30px;
+        height: 30px;
+        animation-delay: 4s;
+      }
+
+      .circles li:nth-child(4) {
+        left: 40%;
+        width: 60px;
+        height: 60px;
+        animation-delay: 0s;
+        animation-duration: 18s;
+        background: rgba(143, 148, 251, 0.15);
+      }
+
+      .circles li:nth-child(5) {
+        left: 65%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 0s;
+      }
+
+      .circles li:nth-child(6) {
+        left: 75%;
+        width: 110px;
+        height: 110px;
+        animation-delay: 3s;
+        background: rgba(78, 84, 200, 0.07);
+      }
+
+      .circles li:nth-child(7) {
+        left: 35%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 7s;
+        background: rgba(143, 148, 251, 0.05);
+      }
+
+      .circles li:nth-child(8) {
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        animation-delay: 15s;
+        animation-duration: 45s;
+      }
+
+      .circles li:nth-child(9) {
+        left: 20%;
+        width: 15px;
+        height: 15px;
+        animation-delay: 2s;
+        animation-duration: 35s;
+      }
+
+      .circles li:nth-child(10) {
+        left: 85%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 0s;
+        animation-duration: 11s;
+        background: rgba(78, 84, 200, 0.05);
+      }
+
+      @keyframes animate {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.8;
+          border-radius: 50%;
+        }
+        100% {
+          transform: translateY(-1000px) rotate(720deg);
+          opacity: 0;
+          border-radius: 50%;
+        }
+      }
+
+      .navbar {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--primary-color) !important;
+      }
+
+      .body_of_signin {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        animation: fadeIn 0.8s ease-in-out;
+        position: relative;
+        z-index: 5;
+      }
+
+      .image-side {
+        flex: 1;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        border-radius: 12px 0 0 12px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        display: none; /* Hidden on small screens */
+      }
+
+      .image-side-content {
+        color: white;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .quiz-icon {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 1.5rem;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .image-side h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .image-side p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 80%;
+        margin: 0 auto;
+      }
+
+      .image-side::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbGwtb3BhY2l0eT0iMC4xIiBmaWxsPSIjZmZmZmZmIj4KICAgICAgICA8Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iMTAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSIxMCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSI3MCIgY3k9IjEwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjkwIiBjeT0iMTAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iMTAiIGN5PSIzMCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iMzAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iNzAiIGN5PSIzMCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSI5MCIgY3k9IjMwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjEwIiBjeT0iNTAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iMzAiIGN5PSI1MCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjcwIiBjeT0iNTAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iOTAiIGN5PSI1MCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSIxMCIgY3k9IjcwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI3MCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSI3MCIgY3k9IjcwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iMTAiIGN5PSI5MCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjkwIiByPSIyIiAvPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iOTAiIHI9IjIiIC8+CiAgICAgICAgPGNpcmNsZSBjeD0iNzAiIGN5PSI5MCIgcj0iMiIgLz4KICAgICAgICA8Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIyIiAvPgogICAgPC9nPgo8L3N2Zz4=');
+        opacity: 0.2;
+      }
+
+      .signin-box {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .signin-header {
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        padding: 1.5rem;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .signin-header::after {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -100%;
+        left: -100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+        animation: pulse 5s infinite;
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { opacity: 0.2; }
+        100% { transform: scale(1.8); opacity: 0; }
+      }
+
+      .signin-body {
+        padding: 2rem;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .input-group {
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .input-group:focus-within {
+        box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.1);
+      }
+
+      .input-group-text {
+        background-color: white;
+        border-right: none;
+        color: var(--primary-color);
+      }
+
+      .form-control {
+        border-left: none;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+      }
+
+      .form-control:focus {
+        box-shadow: none;
+        border-color: #ced4da;
+      }
+
+      .btn-login {
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(78, 84, 200, 0.3);
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(78, 84, 200, 0.4);
+      }
+
+      .btn-login::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: -100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+      }
+
+      .btn-login:hover::after {
+        left: 100%;
+      }
+
+      .register-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .register-link:hover {
+        text-decoration: underline;
+      }
+
+      .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        visibility: hidden;
+        backdrop-filter: blur(5px);
+      }
+
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid var(--primary-light);
+        border-bottom-color: var(--primary-color);
+        border-radius: 50%;
+        animation: rotation 1s linear infinite;
+        box-shadow: 0 0 20px rgba(78, 84, 200, 0.3);
+      }
+
+      .alert {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 300px;
+        z-index: 100;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary-color);
+        animation: slideDown 0.5s ease-out;
+      }
+
+      @keyframes rotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes slideDown {
+        from { transform: translate(-50%, -20px); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+      }
+
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+      }
+
+      /* Toggle password button */
+      .btn-toggle-password {
+        background-color: white;
+        border-left: none;
+        color: var(--primary-color);
+      }
+      
+      .btn-toggle-password:hover {
+        background-color: #f8f9fa;
+        color: var(--primary-color);
+      }
+
+      /* Quiz-related decorative elements */
+      .floating-element {
+        position: absolute;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.1;
+        z-index: 0;
+      }
+
+      .question-mark {
+        font-size: 80px;
+        color: var(--primary-color);
+        top: 10%;
+        right: 5%;
+        animation-delay: 1s;
+      }
+
+      .lightbulb {
+        font-size: 60px;
+        color: var(--primary-color);
+        bottom: 10%;
+        left: 5%;
+        animation-delay: 2s;
+      }
+
+      .brain {
+        font-size: 70px;
+        color: var(--primary-color);
+        top: 20%;
+        left: 10%;
+        animation-delay: 3s;
+      }
+
+      .trophy {
+        font-size: 50px;
+        color: var(--primary-color);
+        bottom: 15%;
+        right: 10%;
+        animation-delay: 0s;
+      }
+
+      /* Media Queries */
+      @media (min-width: 768px) {
+        .image-side {
+          display: flex;
+        }
+        
+        .signin-box {
+          border-radius: 0 12px 12px 0;
+        }
+      }
+    </style>
+    <title>Quiz Master | Login</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-dark">
-      <div class="container-fluid ps-4 gap-3">
-        <img src="{{url_for('static',filename='images/student.png')}}" alt="logo" width="30" height="24" class="d-inline-block align-text-top">
-        <a class="navbar-brand fs-3 text-light" href="/">Quiz Master</a>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="floating-element question-mark">?</div>
+    <div class="floating-element lightbulb">💡</div>
+    <div class="floating-element brain">🧠</div>
+    <div class="floating-element trophy">🏆</div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <div class="d-flex align-items-center">
+          <img src="{{url_for('static',filename='images/student.png')}}" alt="logo" width="36" height="36" class="me-2">
+          <a class="navbar-brand" href="/">Quiz Master</a>
+        </div>
         <button
           class="navbar-toggler"
           type="button"
@@ -38,10 +528,11 @@
         <div class="collapse navbar-collapse" id="navbarNav"></div>
       </div>
     </nav>
-    {% for message in get_flashed_messages()%}
 
-    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-      {{message}}
+    <!-- Flash Messages -->
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+      <i class="bi bi-info-circle me-2"></i> {{message}}
       <button
         type="button"
         class="btn-close"
@@ -49,81 +540,126 @@
         aria-label="Close"
       ></button>
     </div>
-    {%endfor%}
+    {% endfor %}
+
+    <!-- Loading Overlay -->
     <div class="loading">
       <div class="loader"></div>
     </div>
     
-    <div class="body_of_sigin">
+    <!-- Main Content -->
+    <div class="body_of_signin">
       {{added}}
-      <div class="Signin_box rounded-1 shadow p-5">
-        <h1 class="pb-4">Signin</h1>
-        <form method="POST" action="/" style="background-color: whitesmoke;">
-          {{form.hidden_tag()}}
-        
-          <!-- Email input with icon -->
-          <label class="form-label">{{form.mail.label.text}}</label>
-          <div class="input-group mb-3">
-            <span class="input-group-text">
-              <i class="bi bi-envelope-fill"></i> <!-- Bootstrap icon -->
-            </span>
-            {{form.mail(class="form-control mail")}}
+      <div class="login-container">
+        <!-- Image Side (Left Side) -->
+        <div class="image-side">
+          <div class="image-side-content">
+            <svg class="quiz-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="100" r="90" fill="rgba(255,255,255,0.1)" stroke="white" stroke-width="4" />
+              <text x="100" y="130" font-size="120" text-anchor="middle" fill="white">?</text>
+            </svg>
+            <h2>Quiz Master</h2>
+            <p>Test your knowledge, challenge your mind, and become a master of quizzes!</p>
           </div>
-        
-          <!-- Password input with icon and show/hide toggle -->
-          <label class="form-label">{{form.password.label.text}}</label>
-          <div class="input-group mb-4">
-            <span class="input-group-text">
-              <i class="bi bi-lock-fill"></i> <!-- Bootstrap icon -->
-            </span>
-            {{form.password(class="form-control password", id="password-input")}}
-            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" tabindex="-1">
-              <i id="toggle-icon" class="bi bi-eye"></i>
-            </button>
+        </div>
+
+        <!-- Login Form (Right Side) -->
+        <div class="signin-box">
+          <div class="signin-header">
+            <h2 class="mb-0">Welcome Back</h2>
+            <p class="mb-0 opacity-75">Sign in to continue to Quiz Master</p>
           </div>
-        
-          <div class="d-flex flex-column align-items-center justify-content-center gap-3">
-            <!-- {{form.submit(class="btn btn-secondary ps-4 pe-4 pt-2 pb-2", onclick="loading()")}} -->
-            <button type="submit" class="submit" onclick="loading()">Login</button>
-            <a style="color: black" href="/register">Register?</a>
+          <div class="signin-body">
+            <form method="POST" action="/">
+              {{form.hidden_tag()}}
+            
+              <!-- Email input with icon -->
+              <div class="mb-3">
+                <label class="form-label">{{form.mail.label.text}}</label>
+                <div class="input-group">
+                  <span class="input-group-text border-end-0">
+                    <i class="bi bi-envelope-fill"></i>
+                  </span>
+                  {{form.mail(class="form-control mail border-start-0", placeholder="Enter your email")}}
+                </div>
+              </div>
+            
+              <!-- Password input with icon and show/hide toggle -->
+              <div class="mb-4">
+                <!-- <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label mb-0">{{form.password.label.text}}</label>
+                  <a href="#" class="text-decoration-none register-link" style="font-size: 0.875rem;">Forgot password?</a>
+                </div> -->
+                <div class="input-group">
+                  <span class="input-group-text border-end-0">
+                    <i class="bi bi-lock-fill"></i>
+                  </span>
+                  {{form.password(class="form-control password border-start-0 border-end-0", id="password-input", placeholder="Enter your password")}}
+                  <button type="button" class="btn btn-toggle-password border border-start-0" onclick="togglePassword()" tabindex="-1">
+                    <i id="toggle-icon" class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+            
+              <div class="d-grid gap-3">
+                <button type="submit" class="btn btn-login" onclick="loading()">
+                  <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                </button>
+                <div class="text-center">
+                  <span class="text-muted">Don't have an account?</span>
+                  <a href="/register" class="register-link ms-1">Create Account</a>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
-        
+        </div>
       </div>
     </div>
 
     <script>
+      // Empty the inputs function
       function empty_the_inputs() {
         const inputs = document.querySelectorAll("input");
         inputs.forEach((input) => {
           input.value = "";
         });
       }
-    function loading() {
-    let load = document.querySelector('.loading');  
-    let mail = document.querySelector(".mail").value;  
-    let password = document.querySelector(".password").value;  
-    console.log(mail, password); 
-    if (mail != "" && password != ""){
-      load.style.visibility = "visible";
-    } 
-    
-}
-function togglePassword() {
-    const passwordInput = document.getElementById('password-input');
-    const toggleIcon = document.getElementById('toggle-icon');
+      
+      // Loading function with validation
+      function loading() {
+        let load = document.querySelector('.loading');  
+        let mail = document.querySelector(".mail").value;  
+        let password = document.querySelector(".password").value;   
+        
+        if (mail != "" && password != "") {
+          load.style.visibility = "visible";
+        }
+      }
+      
+      // Toggle password visibility
+      function togglePassword() {
+        const passwordInput = document.getElementById('password-input');
+        const toggleIcon = document.getElementById('toggle-icon');
 
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      toggleIcon.classList.remove("bi-eye");
-      toggleIcon.classList.add("bi-eye-slash");
-    } else {
-      passwordInput.type = "password";
-      toggleIcon.classList.remove("bi-eye-slash");
-      toggleIcon.classList.add("bi-eye");
-    }
-  }
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          toggleIcon.classList.remove("bi-eye");
+          toggleIcon.classList.add("bi-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          toggleIcon.classList.remove("bi-eye-slash");
+          toggleIcon.classList.add("bi-eye");
+        }
+      }
 
+      // Auto-hide flash messages after 5 seconds
+      setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        });
+      }, 5000);
     </script>
 
     <script

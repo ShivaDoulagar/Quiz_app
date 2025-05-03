@@ -98,6 +98,10 @@ canvas {
     background-color: #f1f1f1;
   }
 
+  .nav-link{
+    color: black;
+  }
+
   .main-content {
     padding: 2rem;
   }
@@ -105,3 +109,8 @@ canvas {
   .highlight {
     background-color: yellow;
   }
+
+
+#sidebarToggle{
+    height: 80vh;
+}

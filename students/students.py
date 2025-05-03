@@ -316,3 +316,10 @@ def quiz_data(mail):
             db.close()
 
 
+
+
+
+@students_bp.route('/profile')
+def profile():
+    mail = request.args.get('mail')
+    return f"mail is {mail}"

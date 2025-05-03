@@ -43,3 +43,34 @@ modal.addEventListener('show.bs.modal', function (event) {
   document.getElementById('quiz-date').textContent = button.getAttribute('data-date');
   document.getElementById('quiz-duration').textContent = button.getAttribute('data-duration');
 });
+
+
+
+
+// Quiz Search
+document.getElementById('quizsearch').addEventListener('input', function () {
+    const search = this.value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      const title = card.querySelector('.card-title').textContent.toLowerCase();
+      card.style.display = title.includes(search) ? '' : 'none';
+    });
+  });
+
+  // Show Quiz Details Modal
+  document.querySelectorAll('[data-bs-target="#show_details"]').forEach(button => {
+    button.addEventListener('click', () => {
+      document.getElementById('quiz-id').textContent = button.getAttribute('data-id');
+      document.getElementById('quiz-title').textContent = button.getAttribute('data-title');
+      document.getElementById('quiz-chapter').textContent = button.getAttribute('data-chapter');
+      document.getElementById('quiz-date').textContent = button.getAttribute('data-date');
+      document.getElementById('quiz-duration').textContent = button.getAttribute('data-duration');
+    });
+  });
+
+  // Pass Quiz ID to Question Form
+  document.querySelectorAll('[data-bs-target="#addchapter"]').forEach(button => {
+    button.addEventListener('click', () => {
+      document.getElementById('quizIdInput').value = button.getAttribute('data-quizid');
+    });
+  });

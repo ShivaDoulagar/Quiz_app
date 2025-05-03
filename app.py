@@ -9,15 +9,14 @@ from students.students import students_bp
 from sgpa.sgpa import sgpa_bp
 from db import db, migrate
 from models import *
+from config import Config
 
 app = Flask(__name__)
 app.register_blueprint(admin_bp,url_prefix = "/admin")
 app.register_blueprint(students_bp,url_prefix = "/students")
 app.register_blueprint(sgpa_bp,url_prefix = "/sgpa")
+app.config.from_object(Config)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
-app.config['SECRET_KEY'] = "quiz app made by me and very secure!!!!!"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 db.init_app(app)
