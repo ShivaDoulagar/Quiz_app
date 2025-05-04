@@ -1,32 +1,171 @@
-{% extends "student_dashboard.html" %}
-
+{% extends "stu_dash.html" %}
 
 {% block content %}
-<div class="main">
-  <div class="container shadow  rounded p-3">
-      <h1 class="mb-4" >Quiz scores</h1>
-      <table class="table table-striped p-1 border ">
-          <thead>
+<!-- Quiz Scores Container -->
+<div class="container py-4">
+  <div class="card shadow-lg border-0 rounded-lg">
+    <div class="card-header bg-gradient-purple text-white py-3">
+      <h2 class="mb-0 fw-bold"><i class="fas fa-trophy me-2"></i>My Quiz Scores</h2>
+    </div>
+    <div class="card-body">
+      <!-- Responsive Table Wrapper -->
+      <div class="table-responsive">
+        <table class="table border-0 table-hover">
+          <thead class="bg-light">
             <tr>
-              <th scope="col">Quiz Id</th>
-              <th scope="col">Quiz title</th>
-              <th scope="col">Number of questions</th>
-              <th scope="col">Date</th>
-              <th scope="col">Score</th>
+              <th scope="col" class="fw-bold text-purple"><i class="fas fa-hashtag me-1"></i>Quiz ID</th>
+              <th scope="col" class="fw-bold text-purple"><i class="fas fa-heading me-1"></i>Quiz Title</th>
+              <th scope="col" class="fw-bold text-purple non"><i class="fas fa-question-circle me-1"></i>Questions</th>
+              <th scope="col" class="fw-bold text-purple non"><i class="fas fa-calendar-day me-1"></i>Date</th>
+              <th scope="col" class="fw-bold text-purple"><i class="fas fa-star me-1"></i>Score</th>
+              <th scope="col" class="fw-bold text-purple"><i class="fas fa-percent me-1"></i>Percentage</th>
+              <th scope="col" class="fw-bold text-purple"><i class="fas fa-award me-1"></i>Grade</th>
             </tr>
           </thead>
           <tbody>
-            {%for quiz in data %}
-            <tr>
-              <td>{{quiz[0]}}</td>
-              <td>{{quiz[4]}}</td>
-              <td>{{quiz[2]}}</td>
-              <td>{{quiz[3][:10] }}</td>
-              <td style="color: red ;"  >{{quiz[1]}}</td>
+            {% for quiz in data %}
+            <tr class="align-middle">
+              <td class="fw-medium">{{quiz[0]}}</td>
+              <td>{{quiz[4] | capitalize}}</td>
+              <td class="non">{{quiz[2]}}</td>
+              <td class="non">{{quiz[3][:10]}}</td>
+              <td>
+                <span class="badge bg-secondary px-3 py-2 rounded-pill fw-normal">
+                  {{quiz[1]}}
+                </span>
+              </td>
+              {% set score = quiz[1] | int %}
+              {% set total = quiz[2] | int %}
+              {% set percentage = (score / total * 100) | round(1) if total > 0 else 0 %}
+              <td>
+                {% if percentage >= 90 %}
+                  <span class="badge bg-success px-3 py-2 rounded-pill fw-normal">
+                    <i class="fas fa-check-circle me-1"></i>{{percentage}}%
+                  </span>
+                {% elif percentage >= 70 %}
+                  <span class="badge bg-primary px-3 py-2 rounded-pill fw-normal">
+                    <i class="fas fa-thumbs-up me-1"></i>{{percentage}}%
+                  </span>
+                {% elif percentage >= 50 %}
+                  <span class="badge bg-warning px-3 py-2 rounded-pill fw-normal text-dark">
+                    <i class="fas fa-exclamation-circle me-1"></i>{{percentage}}%
+                  </span>
+                {% else %}
+                  <span class="badge bg-danger px-3 py-2 rounded-pill fw-normal">
+                    <i class="fas fa-times-circle me-1"></i>{{percentage}}%
+                  </span>
+                {% endif %}
+              </td>
+              <td>
+                {% if percentage >= 90 %}
+                  <span class="badge bg-purple px-3 py-2 rounded-pill fw-normal">O</span>
+                {% elif percentage >= 80 %}
+                  <span class="badge bg-success px-3 py-2 rounded-pill fw-normal">A+</span>
+                {% elif percentage >= 70 %}
+                  <span class="badge bg-success px-3 py-2 rounded-pill fw-normal">A</span>
+                {% elif percentage >= 60 %}
+                  <span class="badge bg-primary px-3 py-2 rounded-pill fw-normal">B+</span>
+                {% elif percentage >= 50 %}
+                  <span class="badge bg-info px-3 py-2 rounded-pill fw-normal">B</span>
+                {% elif percentage >= 40 %}
+                  <span class="badge bg-warning px-3 py-2 rounded-pill fw-normal text-dark">C</span>
+                {% else %}
+                  <span class="badge bg-danger px-3 py-2 rounded-pill fw-normal">F</span>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+      </div>
+      
+      <!-- No Scores Message (if needed) -->
+      {% if data|length == 0 %}
+      <div class="text-center py-5">
+        <div class="mb-3">
+          <i class="fas fa-clipboard-list fa-4x text-muted"></i>
+        </div>
+        <h4 class="text-muted">No quiz scores available yet</h4>
+        <p class="text-muted mb-4">Complete your first quiz to see your scores here</p>
+        <a href="#" class="btn btn-gradient-purple">Browse Available Quizzes</a>
+      </div>
+      {% endif %}
+    </div>
   </div>
 </div>
+
+<!-- Font Awesome (if not already included in base template) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Custom CSS -->
+<style>
+  :root {
+    --primary-purple: #6366f1;
+    --light-purple: #8287f7;
+    --dark-purple: #4f46e5;
+    --soft-purple: #eef2ff;
+  }
+  
+  .bg-gradient-purple {
+    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-purple) 100%);
+  }
+  
+  .bg-purple {
+    background-color: var(--primary-purple);
+    color: white;
+  }
+  
+  .text-purple {
+    color: var(--primary-purple) !important;
+  }
+  
+  .card {
+    transition: all 0.3s;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  thead tr {
+    border-bottom: 2px solid var(--primary-purple);
+  }
+  
+  tbody tr {
+    transition: all 0.2s;
+  }
+  
+  tbody tr:hover {
+    background-color: var(--soft-purple) !important;
+  }
+  
+  .badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Add responsive adjustments */
+  @media (max-width: 768px) {
+    .non {
+      display: none;
+    }
+  }
+  
+  .btn-gradient-purple {
+    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-purple) 100%);
+    color: white;
+    border: none;
+    transition: all 0.3s;
+  }
+  
+  .btn-gradient-purple:hover {
+    background: linear-gradient(135deg, var(--dark-purple) 0%, var(--primary-purple) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+  }
+</style>
 {% endblock %}

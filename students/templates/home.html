@@ -1,198 +1,432 @@
-{% extends "student_dashboard.html" %}
+{% extends "stu_dash.html" %}
 
- {% block content %}
- <div class="outer_container container mb-4  rounded ">
-  <h2>Quizzes</h2>
-  <!-- Responsive Table Wrapper -->
-  <div class="table-responsive rounded">
-    <table class="table border  table-striped table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Title</th>
-          <th class="non" scope="col">Questions</th>
-          <th class="non" scope="col">Date</th>
-          <th class="non" scope="col">Duration</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for quiz in new_data %}
-        <tr>
-          <td>{{quiz[0]}}</td>
-          <td>{{quiz[6] | capitalize}}</td>
-          <td class="non">{{quiz[1]}}</td>
-          <td class="non">{{quiz[2]}}</td>
-          <td class="non">{{quiz[3]}}</td>
-          <td>
-            <div class="d-flex  gap-2">
-              <!-- View Button -->
-              <button 
-                class="btn btn-outline-success view-btn" 
-                data-bs-toggle="modal" 
-                data-bs-target="#viewmodal"
-                data-id="{{ quiz[0] }}" 
-                data-quiz_title = {{quiz[6]}}
-                data-subject="{{ quiz[5] }}" 
-                data-chapter="{{ quiz[4] }}" 
-                data-questions="{{ quiz[1] }}" 
-                data-date="{{ quiz[2] }}" 
-                data-duration="{{ quiz[3] }}">
-                View
-              </button>
+{% block content %}
+<!-- Main Quiz List Container -->
+<div class="container py-4">
+  <div class="card shadow-lg border-0 rounded-lg mb-5">
+    <div class="card-header bg-gradient-purple text-white py-3">
+      <h2 class="mb-0 fw-bold"><i class="fas fa-clipboard-list me-2"></i>My Quizzes</h2>
+    </div>
+    <div class="card-body">
+      <!-- Responsive Table Wrapper -->
+      <div class="table-responsive">
+        <table class="table border-0 table-hover">
+          <thead class="bg-light">
+            <tr>
+              <th scope="col" class="fw-bold text-purple">#</th>
+              <th scope="col" class="fw-bold text-purple">Title</th>
+              <th class="non fw-bold text-purple" scope="col">Questions</th>
+              <th class="non fw-bold text-purple" scope="col">Date</th>
+              <th class="non fw-bold text-purple" scope="col">Duration</th>
+              <th scope="col" class="fw-bold text-purple">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for quiz in new_data %}
+            <tr class="align-middle">
+              <td>{{quiz[0]}}</td>
+              <td class="fw-medium">{{quiz[6] | capitalize}}</td>
+              <td class="non">{{quiz[1]}}</td>
+              <td class="non">{{quiz[2]}}</td>
+              <td class="non">{{quiz[3]}} hrs</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <!-- View Button -->
+                  <button 
+                    class="btn btn-sm btn-outline-primary view-btn" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#viewmodal"
+                    data-id="{{ quiz[0] }}" 
+                    data-quiz_title={{quiz[6]}}
+                    data-subject="{{ quiz[5] }}" 
+                    data-chapter="{{ quiz[4] }}" 
+                    data-questions="{{ quiz[1] }}" 
+                    data-date="{{ quiz[2] }}" 
+                    data-duration="{{ quiz[3] }}">
+                    <i class="fas fa-eye me-1"></i> View
+                  </button>
 
-              <!-- Start or Completed Button -->
-              <div class="d-flex justify-content-center">
-                {% if quiz[2] == date %}
-                  <form method="post" action="{{url_for('students.student_dashboard', mail=mail, quiz_id=quiz[0])}}">
-                    <button type="submit" class="btn btn-outline-primary w-100" onclick="confirm('Are you sure you want to start the test?')">
-                      Start test
-                    </button>
-                  </form>
-                {% elif quiz[2] < date %}
-                  <button class="btn btn-warning text-light w-100" onclick="alert('Oops! Too late')">Completed</button>
-                {% else %}
-                  <button class="btn btn-danger w-100" onclick="alert('The quiz date is not today')">Upcoming test</button>
-                {% endif %}
+                  <!-- Start or Completed Button -->
+                  <div class="d-flex justify-content-center">
+                    {% if quiz[2] == date %}
+                      <form method="post" action="{{url_for('students.student_dashboard', mail=mail, quiz_id=quiz[0])}}">
+                        <button type="submit" class="btn btn-sm btn-gradient-purple text-white" onclick="return confirm('Are you sure you want to start the test?')">
+                          <i class="fas fa-play-circle me-1"></i> Start Quiz
+                        </button>
+                      </form>
+                    {% elif quiz[2] < date %}
+                      <button class="btn btn-sm btn-warning text-white" onclick="alert('Oops! Too late')">
+                        <i class="fas fa-clock me-1"></i> Completed
+                      </button>
+                    {% else %}
+                      <button class="btn btn-sm btn-soft-purple" onclick="alert('The quiz date is not today')">
+                        <i class="fas fa-calendar-alt me-1"></i> Upcoming
+                      </button>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Modal -->
+  <div class="modal fade" id="viewmodal" tabindex="-1" aria-labelledby="viewModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-gradient-purple text-white py-2">
+          <h5 class="modal-title fw-bold fs-6" id="viewModalLabel"><i class="fas fa-info-circle me-1"></i>Quiz Details</h5>
+          <button type="button" class="btn-close btn-close-white btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3">
+          <h5 class="text-center text-purple mb-2"><span id="quiz-title" class="fw-bold"></span></h5>
+          
+          <div class="quiz-details">
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-hashtag text-purple me-1"></i>ID:</span>
+              <span id="quiz-id" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-book text-purple me-1"></i>Subject:</span>
+              <span id="quiz-subject" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-bookmark text-purple me-1"></i>Chapter:</span>
+              <span id="quiz-chapter" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-question-circle text-purple me-1"></i>Questions:</span>
+              <span id="quiz-questions" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-calendar-day text-purple me-1"></i>Date:</span>
+              <span id="quiz-date" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label"><i class="fas fa-hourglass-half text-purple me-1"></i>Duration:</span>
+              <span id="quiz-duration" class="detail-value"></span> Hours
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer py-2">
+          <button type="button" class="btn btn-soft-purple btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Dashboard -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-gradient-purple text-white py-3">
+          <h2 class="mb-0 fw-bold"><i class="fas fa-chart-line me-2"></i>My Performance</h2>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Subject Chart -->
+            <div class="col-lg-6 mb-4">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                  <h4 class="text-center text-purple mb-3"><i class="fas fa-book me-2"></i>Subject Performance</h4>
+                  <div class="chart-container" style="position: relative; height: 250px;">
+                    <canvas id="subjectChart"></canvas>
+                  </div>
+                </div>
               </div>
             </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="modal fade" id="viewmodal" tabindex="-1" aria-labelledby="viewModalLabel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="viewModalLabel">Quiz Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Id</td>
-                <td><span id="quiz-id"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Title</td>
-                <td><span id="quiz-title"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Subject:</td>
-                <td><span id="quiz-subject"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Chapter:</td>
-                <td><span id="quiz-chapter"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>Number of questions:</td>
-                <td><span id="quiz-questions"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">6</th>
-                <td>Scheduled Date:</td>
-                <td><span id="quiz-date"></span></td>
-              </tr>
-              <tr>
-                <th scope="row">7</th>
-                <td>Duration:</td>
-                <td><span id="quiz-duration"></span> Hours</td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- Monthly Chart -->
+            <div class="col-lg-6 mb-4">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                  <h4 class="text-center text-purple mb-3"><i class="fas fa-calendar-alt me-2"></i>Monthly Activity</h4>
+                  <div class="chart-container" style="position: relative; height: 250px;">
+                    <canvas id="monthChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<!-- Add custom CSS -->
+<style>
+  :root {
+    --primary-purple: #6366f1;
+    --light-purple: #8287f7;
+    --dark-purple: #4f46e5;
+    --soft-purple: #eef2ff;
+  }
+  
+  body {
+    background-color: #f8fafc;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .bg-gradient-purple {
+    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-purple) 100%);
+  }
+  
+  .text-purple {
+    color: var(--primary-purple) !important;
+  }
+  
+  .btn-gradient-purple {
+    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-purple) 100%);
+    border: none;
+    transition: all 0.3s;
+  }
+  
+  .btn-gradient-purple:hover {
+    background: linear-gradient(135deg, var(--dark-purple) 0%, var(--primary-purple) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+  }
+  
+  .btn-soft-purple {
+    background-color: var(--soft-purple);
+    color: var(--primary-purple);
+    border: 1px solid var(--soft-purple);
+    transition: all 0.3s;
+  }
+  
+  .btn-soft-purple:hover {
+    background-color: var(--primary-purple);
+    color: white;
+  }
+  
+  .card {
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .detail-row {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  
+  .detail-label {
+    font-weight: 600;
+    color: var(--primary-purple);
+  }
+  
+  .detail-value {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  thead tr {
+    border-bottom: 2px solid var(--primary-purple);
+  }
+  
+  .modal-content {
+    border-radius: 12px;
+  }
+  
+  .quiz-info-card {
+    background-color: #f8fafc;
+    border-radius: 10px;
+  }
+  
+  /* Add responsive adjustments */
+  @media (max-width: 768px) {
+    .non {
+      display: none;
+    }
+  }
 
+  /* Fix modal z-index issues */
+  .modal {
+    z-index: 9999 !important;
+  }
+  
+  .modal-backdrop {
+    z-index: 9998 !important;
+  }
+</style>
 
-
-
-
-
-
-
-<!-- summary -->
-<div class="container d-flex justify-content-center align-items-center">
-
-<div class=" d-flex  container chat_cont mb-5">
-  <div class="chart-container">
-      <div class="chart-box ">
-          <h3>Subject wise quiz attempts</h3>
-          <canvas id="subjectChart"></canvas>
-      </div>
-      <div class="chart-box p-5">
-          <h3>Month wise no.quizzes attempted</h3>
-          <canvas id="monthChart"></canvas>
-      </div>
-  </div>
-</div>
-</div>
-
+<!-- Chart.js Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      fetch("/students/{{ mail }}/summary/api")  
-          .then(response => response.json())
-          .then(data => {
-              console.log(data);  
-              const subjectLabels = data.subject_attempts.map(item => item[0]);
-              const subjectValues = data.subject_attempts.map(item => item[1]);
-              const monthLabels = Object.keys(data.monthly_attempts);
-              const monthValues = Object.values(data.monthly_attempts);
-              console.log(subjectLabels);
-              console.log(subjectValues);
-              console.log(monthLabels);
-              console.log(monthValues);
+    // Modal Data Handling
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        document.getElementById('quiz-id').textContent = this.getAttribute('data-id');
+        document.getElementById('quiz-title').textContent = this.getAttribute('data-quiz_title').replace(/_/g, ' ');
+        document.getElementById('quiz-subject').textContent = this.getAttribute('data-subject');
+        document.getElementById('quiz-chapter').textContent = this.getAttribute('data-chapter');
+        document.getElementById('quiz-questions').textContent = this.getAttribute('data-questions');
+        document.getElementById('quiz-date').textContent = this.getAttribute('data-date');
+        document.getElementById('quiz-duration').textContent = this.getAttribute('data-duration');
+      });
+    });
 
-              // Subject-wise Bar Chart
-              new Chart(document.getElementById("subjectChart"), {
-                  type: "bar",
-                  data: {
-                      labels: subjectLabels,
-                      datasets: [{
-                          label: "Number of Quizzes",
-                          data: subjectValues,
-                          backgroundColor: ["#4CAF50", "#FFC107", "#00BCD4"]
-                      }]
+    // Fetch and render charts
+    fetch("/students/{{ mail }}/summary/api")  
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);  
+        const subjectLabels = data.subject_attempts.map(item => item[0]);
+        const subjectValues = data.subject_attempts.map(item => item[1]);
+        const monthLabels = Object.keys(data.monthly_attempts);
+        const monthValues = Object.values(data.monthly_attempts);
+
+        // Subject-wise Bar Chart with improved styling
+        new Chart(document.getElementById("subjectChart"), {
+          type: "bar",
+          data: {
+            labels: subjectLabels,
+            datasets: [{
+              label: "Quizzes Attempted",
+              data: subjectValues,
+              backgroundColor: [
+                'rgba(99, 102, 241, 0.8)',
+                'rgba(139, 92, 246, 0.8)',
+                'rgba(168, 85, 247, 0.8)',
+                'rgba(217, 70, 239, 0.8)'
+              ],
+              borderColor: [
+                'rgba(99, 102, 241, 1)',
+                'rgba(139, 92, 246, 1)',
+                'rgba(168, 85, 247, 1)',
+                'rgba(217, 70, 239, 1)'
+              ],
+              borderWidth: 2,
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(79, 70, 229, 0.9)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                displayColors: false,
+                callbacks: {
+                  title: function(tooltipItems) {
+                    return tooltipItems[0].label;
                   },
-                  options: {
-                      responsive: true,
-                      plugins: {
-                          legend: { display: false }
-                      }
+                  label: function(context) {
+                    return `Quizzes: ${context.raw}`;
                   }
-              });
-
-              // Month-wise Pie Chart
-              new Chart(document.getElementById("monthChart"), {
-                  type: "pie",
-                  data: {
-                      labels: monthLabels,
-                      datasets: [{
-                          data: monthValues,
-                          backgroundColor: ["#ff9999", "#66b3ff", "#99ff99", "#ffcc99"]
-                      }]
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0,
+                  font: {
+                    family: "'Poppins', sans-serif"
                   }
-              });
+                },
+                grid: {
+                  display: true,
+                  drawBorder: false,
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                ticks: {
+                  font: {
+                    family: "'Poppins', sans-serif"
+                  }
+                },
+                grid: {
+                  display: false,
+                  drawBorder: false
+                }
+              }
+            }
+          }
+        });
 
-          })
-          .catch(error => console.error("Error fetching data:", error));
+        // Month-wise Doughnut Chart
+        new Chart(document.getElementById("monthChart"), {
+          type: "doughnut",
+          data: {
+            labels: monthLabels,
+            datasets: [{
+              data: monthValues,
+              backgroundColor: [
+                'rgba(99, 102, 241, 0.8)',
+                'rgba(139, 92, 246, 0.8)',
+                'rgba(168, 85, 247, 0.8)',
+                'rgba(217, 70, 239, 0.8)',
+                'rgba(236, 72, 153, 0.8)'
+              ],
+              borderColor: [
+                'rgba(99, 102, 241, 1)',
+                'rgba(139, 92, 246, 1)',
+                'rgba(168, 85, 247, 1)',
+                'rgba(217, 70, 239, 1)',
+                'rgba(236, 72, 153, 1)'
+              ],
+              borderWidth: 2,
+              hoverOffset: 15
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 15,
+                  font: {
+                    family: "'Poppins', sans-serif",
+                    size: 12
+                  },
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(79, 70, 229, 0.9)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                displayColors: false,
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.raw} quizzes`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error("Error fetching data:", error));
   });
 </script>
 
