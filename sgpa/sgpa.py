@@ -18,7 +18,7 @@ def main():
     mail = request.args.get('mail')
     try:
         if request.method == 'GET':
-            return render_template("index.html")
+            return render_template("sgpa.html")
 
         elif request.method == 'POST':
             convert = conversion.Conversion()
@@ -45,7 +45,7 @@ def main():
 
             else:
                 flash("Please upload a valid PDF file.")
-                return render_template("index.html")
+                return render_template("sgpa.html")
 
     except Exception as e:
         return redirect(url_for("main"))

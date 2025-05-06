@@ -1,55 +1,569 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
+    <title>Quiz Master</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #f8f9fa;
+            --accent-color: #fbbc05;
+            --danger-color: #ea4335;
+            --success-color: #34a853;
+            --transition-speed: 0.3s;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--primary-color), #5a9af8) !important;
+            padding: 10px 20px;
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand:before {
+            content: "✓";
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin-top: 2rem;
+        }
+        
+        .exam {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #5a9af8) !important;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .timer {
+            background-color: var(--danger-color) !important;
+            border-radius: 6px !important;
+            transition: all 0.5s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer.warning {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .question-box {
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            border-left: 4px solid var(--primary-color) !important;
+            background-color: white;
+        }
+        
+        .question-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-box h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-check {
+            margin-bottom: 0.7rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color var(--transition-speed);
+        }
+        
+        .form-check:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .form-check-input {
+            cursor: pointer;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            padding-left: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(66, 133, 244, 0.3);
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+            background-color: #3b78e7;
+        }
+        
+        .progress {
+            height: 8px;
+            margin-top: 10px;
+            background-color: #e9ecef;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+        }
+        
+        #response-message {
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: rgba(52, 168, 83, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .error-message {
+            background-color: rgba(234, 67, 53, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .question-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+        
+        .question-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Progress indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .completion-status {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
-    
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quiz Master</a>
+        </div>
+    </nav>
 
-
-<nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;" >
-        
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Quiz Master</a>
-    </div>
-  </nav>
-
-<div class="container p-4 shadow-lg rounded bg-light">
-    <form id="quiz-results">
-        <div class="exam card p-3">
-            <!-- Header -->
-            <div class="header d-flex justify-content-between align-items-center bg-primary text-white p-3 rounded">
-                <div></div>
-                <div><h1>Quiz</h1></div>
-                <div class="timer d-flex align-items-center">
-                    <span class="me-2">Time remaining:</span>
-                    <div class="timer bg-danger p-2 text-white rounded">
-                        <span id="timer">Loading...</span>
+    <div class="container p-4 shadow-lg rounded bg-light animate__animated animate__fadeIn">
+        <form id="quiz-results">
+            <div class="exam card p-3">
+                <!-- Header -->
+                <div class="header d-flex justify-content-between align-items-center text-white p-3 rounded animate__animated animate__slideInDown">
+                    <div></div>
+                    <div><h1>Quiz Challenge</h1></div>
+                    <div class="timer-container d-flex align-items-center">
+                        <span class="me-2">Time remaining:</span>
+                        <div class="timer p-2 text-white rounded">
+                            <span id="timer">Loading...</span>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Progress indicator -->
+                <div class="progress-indicator mt-3">
+                    <div class="completion-status">
+                        Answered: <span id="answered-count">0</span>/<span id="total-questions">0</span>
+                    </div>
+                    <div class="completion-status">
+                        Progress: <span id="progress-percentage">0%</span>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div id="question-container" class="mt-3">
+                    <!-- Questions will be loaded here dynamically -->
+                    <div class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading your quiz...</p>
+                    </div>
+                </div>
+
+                <!-- Response Message -->
+                <div id="response-message" class="mt-3 text-center"></div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end mt-4 mb-2 mx-2">
+                    <button type="submit" class="btn btn-submit animate__animated animate__pulse">
+                        <span>Submit Quiz</span>
+                    </button>
+                </div>
             </div>
-            <div id="question-container" class="mt-3">
-                <!-- Questions will be loaded here dynamically -->
-            </div>
+        </form>
+    </div>
 
-            <!-- Response Message -->
-            <div id="response-message" class="mt-3 text-center"></div>
+    <!-- Link to external JavaScript -->
+    <script src="{{ url_for('students.static', filename='js/exam.js') }}"></script>
 
-            <!-- Submit Button -->
-            <div class="d-flex justify-content-start mt-3 mx-2">
-                <button type="submit" class="btn btn-outline-primary">Submit</button>
-            </div>
-        </div>
-    </form>
-</div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const urlParts = window.location.pathname.split("/");
+            const mail = urlParts[2];  
+            const queryParams = new URLSearchParams(window.location.search);
+            const quiz_id = queryParams.get('quiz_id');  
 
-<!-- Link to external JavaScript -->
-<script src="{{ url_for('students.static', filename='js/exam.js') }}"></script>
+            if (!mail || !quiz_id) {
+                console.error("Missing mail or quiz_id in URL");
+                return;
+            }
 
+            try {
+                const response = await fetch(`/students/${mail}/${quiz_id}`);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                const data = await response.json();
+                if (!data.questions || !Array.isArray(data.questions)) {
+                    console.error("Invalid API response format", data);
+                    return;
+                }
+
+                renderQuiz(data.questions);
+                
+                // Start the timer
+                startCountdownTimer(data.time);
+                
+                // Restore any saved answers
+                restoreSavedAnswers(mail, quiz_id);
+                
+                updateProgressBar();
+            } catch (error) {
+                console.error("Failed to fetch quiz:", error);
+                document.getElementById("question-container").innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        Failed to load the quiz. Please refresh the page or try again later.
+                    </div>
+                `;
+            }
+        });
+
+        // Function to render quiz questions dynamically
+        function renderQuiz(questions) {
+            const questionContainer = document.getElementById("question-container");
+            questionContainer.innerHTML = ""; 
+            
+            // Update total questions count
+            document.getElementById("total-questions").textContent = questions.length;
+
+            questions.forEach((item, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question-box", "p-3", "mb-3", "border", "rounded", "animate__animated", "animate__fadeIn");
+                questionDiv.style.animationDelay = `${index * 0.1}s`;
+
+                questionDiv.innerHTML = `
+                    <div class="question-content">
+                        <span class="question-number">${index + 1}</span>
+                        <h4>${item.question}</h4>
+                    </div>
+                    <div class="options">
+                        ${item.options.map((option, i) => `
+                            <div class="form-check">
+                                <input class="form-check-input question-option" type="radio" name="q${index}" id="q${index}o${i}" value="${option}" data-question-index="${index}">
+                                <label class="form-check-label" for="q${index}o${i}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                questionContainer.appendChild(questionDiv);
+            });
+
+            // Add event listeners to all radio inputs for progress tracking
+            document.querySelectorAll('.question-option').forEach(option => {
+                option.addEventListener('change', updateProgressBar);
+            });
+        }
+
+        // Function to update the progress bar
+        function updateProgressBar() {
+            const totalQuestions = document.getElementById("total-questions").textContent;
+            const answeredQuestions = document.querySelectorAll('.question-box').length > 0 ? 
+                Array.from(document.querySelectorAll('.question-box')).filter(box => {
+                    const inputs = box.querySelectorAll('input[type="radio"]');
+                    return Array.from(inputs).some(input => input.checked);
+                }).length : 0;
+            
+            document.getElementById("answered-count").textContent = answeredQuestions;
+            
+            const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+            document.getElementById("progress-percentage").textContent = `${percentage}%`;
+            
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = `${percentage}%`;
+            progressBar.setAttribute('aria-valuenow', percentage);
+        }
+
+        // Function to start the countdown timer
+        function startCountdownTimer(timeInMinutes) {
+            const urlParts = window.location.pathname.split("/");
+            const mail = urlParts[2];  
+            const queryParams = new URLSearchParams(window.location.search);
+            const quiz_id = queryParams.get('quiz_id');
+            const savedTimerKey = `quiz_timer_${mail}_${quiz_id}`;
+            const startTimeKey = `quiz_start_${mail}_${quiz_id}`;
+            
+            let timerDisplay = document.getElementById('timer');
+            let timeLeft;
+            
+            // Check if we have a saved end time
+            const savedEndTime = localStorage.getItem(`quiz_end_${mail}_${quiz_id}`);
+            
+            if (savedEndTime) {
+                // Calculate remaining time based on saved end time
+                const now = new Date().getTime();
+                const endTime = parseInt(savedEndTime);
+                timeLeft = Math.max(0, Math.floor((endTime - now) / 1000));
+            } else {
+                // No saved end time, set up a new timer
+                timeLeft = Math.round(timeInMinutes * 60);
+                // Save the end time for this quiz
+                const endTime = new Date().getTime() + (timeLeft * 1000);
+                localStorage.setItem(`quiz_end_${mail}_${quiz_id}`, endTime.toString());
+            }
+
+            function updateTimer() {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                // Add warning animation when time is running low
+                if (timeLeft <= 60) { // Last minute
+                    document.querySelector('.timer').classList.add('warning');
+                    timerDisplay.parentElement.style.backgroundColor = '#ff3b30';
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Clear all timer storage
+                    localStorage.removeItem(`quiz_end_${mail}_${quiz_id}`);
+                    localStorage.removeItem(savedTimerKey);
+                    localStorage.removeItem(startTimeKey);
+                    
+                    // Show alert with animation
+                    const responseMessage = document.getElementById('response-message');
+                    responseMessage.className = 'mt-3 text-center error-message animate__animated animate__fadeIn';
+                    responseMessage.style.display = 'block';
+                    responseMessage.innerHTML = '<strong>Time\'s up!</strong> Your quiz is being submitted...';
+                    
+                    setTimeout(() => {
+                        submitQuizForm();
+                    }, 1500);
+                } else {
+                    timeLeft--; 
+                }
+            }
+
+            updateTimer();
+            let timerInterval = setInterval(updateTimer, 1000);
+            
+            // Also save the current answers when the timer updates
+            setInterval(() => {
+                saveCurrentAnswers(mail, quiz_id);
+            }, 10000); // Save answers every 10 seconds
+            
+            // Clean up timer when leaving the page
+            window.addEventListener('beforeunload', function() {
+                // We intentionally don't remove the timer from localStorage so it can be resumed
+                saveCurrentAnswers(mail, quiz_id);
+            });
+        }
+        
+        // Function to save current quiz answers to localStorage
+        function saveCurrentAnswers(mail, quiz_id) {
+            const answersKey = `quiz_answers_${mail}_${quiz_id}`;
+            const answers = {};
+            
+            // Collect all currently selected answers
+            document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+                const name = input.getAttribute('name');
+                const value = input.value;
+                answers[name] = value;
+            });
+            
+            // Save to localStorage
+            localStorage.setItem(answersKey, JSON.stringify(answers));
+        }
+
+        // Function to submit the form automatically
+        function submitQuizForm() {
+            const urlParts = window.location.pathname.split("/");
+            const mail = urlParts[2];  
+            const queryParams = new URLSearchParams(window.location.search);
+            const quiz_id = queryParams.get('quiz_id');
+            
+            // Clear all saved quiz data
+            localStorage.removeItem(`quiz_timer_${mail}_${quiz_id}`);
+            localStorage.removeItem(`quiz_start_${mail}_${quiz_id}`);
+            localStorage.removeItem(`quiz_end_${mail}_${quiz_id}`);
+            localStorage.removeItem(`quiz_answers_${mail}_${quiz_id}`);
+            
+            let quizForm = document.getElementById('quiz-results');
+            if (quizForm) {
+                quizForm.submit();
+            } else {
+                console.error("Quiz form not found!");
+            }
+        }
+        
+        // Function to restore saved answers
+        function restoreSavedAnswers(mail, quiz_id) {
+            const answersKey = `quiz_answers_${mail}_${quiz_id}`;
+            const savedAnswers = localStorage.getItem(answersKey);
+            
+            if (savedAnswers) {
+                try {
+                    const answers = JSON.parse(savedAnswers);
+                    
+                    // Apply saved answers to form
+                    Object.keys(answers).forEach(questionName => {
+                        const value = answers[questionName];
+                        const input = document.querySelector(`input[name="${questionName}"][value="${value}"]`);
+                        if (input) {
+                            input.checked = true;
+                        }
+                    });
+                    
+                    // Update progress bar after restoring answers
+                    updateProgressBar();
+                    
+                    // Show notification that answers were restored
+                    const responseMessage = document.getElementById('response-message');
+                    responseMessage.className = 'mt-3 text-center success-message animate__animated animate__fadeIn';
+                    responseMessage.style.display = 'block';
+                    responseMessage.innerHTML = '<strong>Your progress has been restored!</strong>';
+                    
+                    // Hide notification after 3 seconds
+                    setTimeout(() => {
+                        responseMessage.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (e) {
+                    console.error("Error restoring saved answers:", e);
+                }
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("quiz-results");
+
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault(); 
+
+                const formData = new FormData(form);
+                const urlParts = window.location.pathname.split("/");
+                const mail = urlParts[2];  
+                const queryParams = new URLSearchParams(window.location.search);
+                const quiz_id = queryParams.get('quiz_id'); 
+                console.log(mail)
+                
+                // Show submitting message
+                const responseMessage = document.getElementById('response-message');
+                responseMessage.className = 'mt-3 text-center success-message animate__animated animate__fadeIn';
+                responseMessage.style.display = 'block';
+                responseMessage.innerHTML = '<strong>Submitting...</strong> Please wait a moment.';
+
+                try {
+                    const response = await fetch(`/students/${mail}/${quiz_id}`, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    console.log(result);
+                    
+                    // Clear all saved quiz data
+                    localStorage.removeItem(`quiz_timer_${mail}_${quiz_id}`);
+                    localStorage.removeItem(`quiz_start_${mail}_${quiz_id}`);
+                    localStorage.removeItem(`quiz_end_${mail}_${quiz_id}`);
+                    localStorage.removeItem(`quiz_answers_${mail}_${quiz_id}`);
+                    
+                    // Show success message before redirecting
+                    responseMessage.innerHTML = '<strong>Success!</strong> Redirecting to your dashboard...';
+                    
+                    setTimeout(() => {
+                        window.location.href = `/students/${mail}`;  
+                    }, 1500);
+
+                } catch (error) {
+                    console.error("Error submitting quiz:", error);
+                    responseMessage.className = 'mt-3 text-center error-message animate__animated animate__fadeIn';
+                    responseMessage.innerHTML = '<strong>Error!</strong> Failed to submit quiz. Please try again.';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -524,6 +524,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'sgpa.main' %}active{% endif %}" href="{{ url_for('chatbot.home') }}">
+                  <span class="nav-icon"><i class="fas fa-users"></i></span>
+                  <span>Chat bot</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link {% if request.endpoint == 'sgpa.main' %}active{% endif %}" href="{{ url_for('sgpa.main', mail=mail) }}">
                   <span class="nav-icon"><i class="fas fa-users"></i></span>
                   <span>SGPA Calculators</span>
@@ -581,42 +587,36 @@
           <div class="offcanvas-body">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link {% if request.path.startswith('/admin/') and request.endpoint == 'admin.list_of_subjects' %}active{% endif %}" href="{{ url_for('admin.list_of_subjects') }}">
+                <a class="nav-link {% if request.endpoint == 'students.student_dashboard' %}active{% endif %}" href="{{ url_for('students.student_dashboard', mail=mail)}}">
                   <span class="nav-icon"><i class="fas fa-home"></i></span>
                   <span>Dashboard</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% if request.path.startswith('/admin/quiz') %}active{% endif %}" href="{{ url_for('admin.quiz') }}">
+                <a class="nav-link {% if request.endpoint == 'students.scores' %}active{% endif %}" href="{{ url_for('students.scores', mail=mail) }}">
                   <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
-                  <span>Quiz</span>
+                  <span>Scores</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% if request.endpoint == 'admin.summary' %}active{% endif %}" href="{{ url_for('admin.summary') }}">
+                <a class="nav-link {% if request.endpoint == 'students.summary' %}active{% endif %}" href="{{ url_for('students.summary', mail=mail) }}">
                   <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
                   <span>Summary</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if request.endpoint == 'sgpa.main' %}active{% endif %}" href="{{ url_for('chatbot.home') }}">
                   <span class="nav-icon"><i class="fas fa-users"></i></span>
-                  <span>Students</span>
+                  <span>Chat bot</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
-                  <span>Courses</span>
+                <a class="nav-link {% if request.endpoint == 'sgpa.main' %}active{% endif %}" href="{{ url_for('sgpa.main', mail=mail) }}">
+                  <span class="nav-icon"><i class="fas fa-users"></i></span>
+                  <span>SGPA Calculators</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                  <span>Settings</span>
-                </a>
-              </li>
-              <li class="nav-item mt-3">
+              <li class="nav-item mt-auto">
                 <a class="nav-link text-danger" href="{{ url_for('logout') }}">
                   <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
                   <span>Logout</span>

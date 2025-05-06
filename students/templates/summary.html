@@ -1,15 +1,22 @@
 {% extends "stu_dash.html" %}
 
 {% block content %}
-<div class=" d-flex  container chat_cont mb-5">
-    <div class="chart-container">
-        <div class="chart-box ">
-            <h3>Subject wise quiz attempts</h3>
-            <canvas id="subjectChart"></canvas>
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <!-- Subject Chart -->
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center">Subject-wise Quiz Attempts</h5>
+                <canvas id="subjectChart"></canvas>
+            </div>
         </div>
-        <div class="chart-box p-5">
-            <h3>Month wise no.quizzes attempted</h3>
-            <canvas id="monthChart"></canvas>
+
+        <!-- Month Chart -->
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center">Monthly Quiz Attempts</h5>
+                <canvas id="monthChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -20,15 +27,10 @@
         fetch("/students/{{ mail }}/summary/api")  
             .then(response => response.json())
             .then(data => {
-                console.log(data);  
                 const subjectLabels = data.subject_attempts.map(item => item[0]);
                 const subjectValues = data.subject_attempts.map(item => item[1]);
                 const monthLabels = Object.keys(data.monthly_attempts);
                 const monthValues = Object.values(data.monthly_attempts);
-                console.log(subjectLabels);
-                console.log(subjectValues);
-                console.log(monthLabels);
-                console.log(monthValues);
 
                 // Subject-wise Bar Chart
                 new Chart(document.getElementById("subjectChart"), {
@@ -38,11 +40,12 @@
                         datasets: [{
                             label: "Number of Quizzes",
                             data: subjectValues,
-                            backgroundColor: ["#4CAF50", "#FFC107", "#00BCD4"]
+                            backgroundColor: "#4CAF50"
                         }]
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false }
                         }
@@ -58,11 +61,21 @@
                             data: monthValues,
                             backgroundColor: ["#ff9999", "#66b3ff", "#99ff99", "#ffcc99"]
                         }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
                     }
                 });
-
             })
             .catch(error => console.error("Error fetching data:", error));
     });
 </script>
+
+<style>
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+</style>
 {% endblock %}

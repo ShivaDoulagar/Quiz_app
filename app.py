@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from admin.admin import admin_bp
 from students.students import students_bp
 from sgpa.sgpa import sgpa_bp
+from chatbot.chatbot import chatbot_bp
 from db import db, migrate
 from models import *
 from config import Config
@@ -14,6 +15,7 @@ from config import Config
 app = Flask(__name__)
 app.register_blueprint(admin_bp,url_prefix = "/admin")
 app.register_blueprint(students_bp,url_prefix = "/students")
+app.register_blueprint(chatbot_bp,url_prefix = "/chatbot")
 app.register_blueprint(sgpa_bp,url_prefix = "/sgpa")
 app.config.from_object(Config)
 
