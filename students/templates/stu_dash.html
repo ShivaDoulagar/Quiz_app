@@ -489,7 +489,7 @@
     </nav>
 
     <!-- Flash Messages -->
-    <div class="position-fixed" style="top: 70px; right: 20px; z-index: 1050;">
+    <div class="position-fixed" style="top: 70px; right: 20px; z-index: 10500;">
       {% for message in get_flashed_messages() %}
         <div class="alert alert-primary alert-dismissible fade show animate__animated animate__fadeInRight" role="alert">
           <i class="fas fa-info-circle me-2"></i> {{ message }}
@@ -576,7 +576,7 @@
         </div>
 
         <!-- Sidebar for mobile (Offcanvas) -->
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+        <div style="z-index: 1000000;" class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">
               <img src="{{url_for('static',filename='images/teacher.png')}}" alt="logo" width="30" class="d-inline-block align-text-top me-2">
